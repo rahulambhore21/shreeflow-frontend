@@ -1,26 +1,22 @@
 import React from 'react'
 import Header from "@/components/Header";
-import Hero from "@/components/Hero";
 import Products from "@/components/Products";
 import ProductDescription from "@/components/ProductDescription";
-import Trust from "@/components/Trust";
 import Footer from "@/components/Footer";
 import MobileActions from "@/components/MobileActions";
-import "./globals.css";
 
-
-function page() {
+function ProductsPage() {
   return (
-    <main className="min-h-screen ">
+    <main className="min-h-screen">
       <Header />
-      <Hero />
-      <Products />
-      <ProductDescription />
-      <Trust />
+      <div className="py-8">
+        <Products />
+        <ProductDescription />
+      </div>
       <Footer />
       <MobileActions />
     </main>
   );
 }
 
-export default page
+export default ProductsPage;

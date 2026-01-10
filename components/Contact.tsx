@@ -1,0 +1,199 @@
+'use client'
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Phone, Mail, MapPin, MessageCircle, Send } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+
+const Contact = () => {
+  const { toast } = useToast();
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    message: "",
+  });
+
+  const contactInfo = [
+    {
+      icon: Phone,
+      label: "Phone",
+      value: "+91 98765 43210",
+      href: "tel:+919876543210",
+    },
+    {
+      icon: MessageCircle,
+      label: "WhatsApp",
+      value: "+91 98765 43210",
+      href: "https://wa.me/919876543210",
+    },
+    {
+      icon: Mail,
+      label: "Email",
+      value: "sales@shreeflow.com",
+      href: "mailto:sales@shreeflow.com",
+    },
+    {
+      icon: MapPin,
+      label: "Address",
+      value: "Industrial Area, Sector 5, New Delhi, India",
+      href: null,
+    },
+  ];
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast({
+      title: "Message Sent",
+      description: "Thank you for contacting us. We'll get back to you soon!",
+    });
+    setFormData({ name: "", phone: "", email: "", message: "" });
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  return (
+    <section id="contact" className="py-20 md:py-32 bg-gradient-to-b from-background to-blue-50/30">
+      <div className="container mx-auto px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="text-center mb-16 md:mb-20">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
+            Get in Touch
+          </h2>
+          <p className="text-muted-foreground max-w-3xl mx-auto text-lg md:text-xl">
+            Have questions about our products? Need a quote? We're here to help.
+          </p>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-20">
+          {/* Contact Info */}
+          <div>
+            <h3 className="text-2xl font-bold text-foreground mb-8">
+              Contact Information
+            </h3>
+
+            <div className="space-y-8">
+              {contactInfo.map((info, index) => (
+                <div key={index} className="flex gap-5 p-6 bg-white/60 rounded-xl border border-blue-200/30 shadow-sm">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-xl flex items-center justify-center flex-shrink-0 border border-blue-200/30">
+                    <info.icon className="w-7 h-7 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-1 font-medium">{info.label}</p>
+                    {info.href ? (
+                      <a
+                        href={info.href}
+                        className="text-foreground font-semibold text-lg hover:text-blue-600 transition-colors"
+                        target={info.href.startsWith("http") ? "_blank" : undefined}
+                        rel={info.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                      >
+                        {info.value}
+                      </a>
+                    ) : (
+                      <p className="text-foreground font-semibold text-lg">{info.value}</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Working Hours */}
+            <div className="mt-10 p-8 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-200/30 shadow-sm">
+              <h4 className="font-bold text-foreground mb-4 text-lg">Working Hours</h4>
+              <p className="text-muted-foreground">
+                Monday – Saturday: 9:00 AM – 6:00 PM<br />
+                Sunday: Closed
+              </p>
+            </div>
+          </div>
+
+          {/* Contact Form */}
+          <div className="bg-card rounded-2xl p-8 md:p-10 shadow-xl border border-blue-200/30">
+            <h3 className="text-2xl font-bold text-foreground mb-8">
+              Send Us a Message
+            </h3>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label htmlFor="contact-name" className="block text-sm font-semibold text-foreground mb-2">
+                  Your Name *
+                </label>
+                <Input
+                  id="contact-name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  placeholder="Enter your name"
+                  className="bg-background border-blue-200 h-12 text-base"
+                />
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="contact-phone" className="block text-sm font-semibold text-foreground mb-2">
+                    Phone Number *
+                  </label>
+                  <Input
+                    id="contact-phone"
+                    name="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    required
+                    placeholder="+91 98765 43210"
+                    className="bg-background border-blue-200 h-12 text-base"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="contact-email" className="block text-sm font-semibold text-foreground mb-2">
+                    Email (Optional)
+                  </label>
+                  <Input
+                    id="contact-email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="your@email.com"
+                    className="bg-background border-blue-200 h-12 text-base"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="contact-message" className="block text-sm font-semibold text-foreground mb-2">
+                  Message *
+                </label>
+                <Textarea
+                  id="contact-message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                  placeholder="Tell us about your requirements..."
+                  rows={5}
+                  className="bg-background border-blue-200 resize-none text-base"
+                />
+              </div>
+
+              <Button
+                type="submit"
+                size="lg"
+                className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-700 hover:to-cyan-700 gap-3 h-14 text-lg font-semibold shadow-lg shadow-blue-500/25"
+              >
+                Send Message
+                <Send className="w-5 h-5" />
+              </Button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Contact;
