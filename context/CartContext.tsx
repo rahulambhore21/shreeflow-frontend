@@ -67,7 +67,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     try {
       setIsLoading(true);
-      await cartService.addToCart(productId, quantity);
+      await cartService.addToCart(user._id, productId, quantity);
       await loadUserCart();
       
       toast({

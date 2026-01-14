@@ -66,12 +66,20 @@ export default function AdminDashboard() {
       const [dashboardData, productsData, ordersData] = await Promise.all([
         analyticsService.getDashboardAnalytics(),
         productService.getAllProducts({ limit: 5 }),
-        adminOrderService.getAllOrders({ limit: 5, sortBy: 'createdAt', sortOrder: 'desc' })
+        adminOrderService.getAllOrders({ limit: 5 })
       ]);
 
       setStats({
-        ...dashboardData.data,
-        recentOrders: ordersData.data
+        totalProducts: dashboardData.overview.totalProducts,
+        totalOrders: dashboardData.overview.totalOrders,
+        totalCustomers: dashboardData.overview.totalUsers,
+        totalRevenue: dashboardData.overview.totalRevenue,
+        newOrdersToday: 0, // This might need to be calculated from dashboardData
+        revenueToday: 0, // This might need to be calculated from dashboardData
+        topSellingProducts: dashboardData.topProducts || [],
+        recentOrders: ordersData.data,
+        monthlyRevenue: dashboardData.dailyRevenue?.map(d => d.revenue) || [],
+        orderStatusDistribution: Object.entries(dashboardData.ordersByStatus || {}).map(([status, count]) => ({ status, count }))
       });
       
       setRecentProducts(productsData.data);

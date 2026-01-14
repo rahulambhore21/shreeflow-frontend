@@ -49,7 +49,7 @@ export default function ProductsPage() {
       setProducts(response.data);
       
       // Extract unique categories
-      const uniqueCategories = [...new Set(response.data.map((p: Product) => p.category).filter(Boolean))];
+      const uniqueCategories = [...new Set(response.data.flatMap((p: Product) => p.categories || []).filter(Boolean))];
       setCategories(uniqueCategories);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -69,7 +69,7 @@ export default function ProductsPage() {
     // Search filter
     if (searchTerm) {
       filtered = filtered.filter(product =>
-        product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.sku?.toLowerCase().includes(searchTerm.toLowerCase())
       );
@@ -77,7 +77,7 @@ export default function ProductsPage() {
 
     // Category filter
     if (selectedCategory !== 'all') {
-      filtered = filtered.filter(product => product.category === selectedCategory);
+      filtered = filtered.filter(product => product.categories?.includes(selectedCategory));
     }
 
     // Sort
@@ -86,24 +86,24 @@ export default function ProductsPage() {
       
       switch (sortBy) {
         case 'name':
-          aValue = a.name?.toLowerCase() || '';
-          bValue = b.name?.toLowerCase() || '';
+          aValue = a.title?.toLowerCase() || '';
+          bValue = b.title?.toLowerCase() || '';
           break;
         case 'price':
           aValue = a.price || 0;
           bValue = b.price || 0;
           break;
         case 'stock':
-          aValue = a.stockQuantity || 0;
-          bValue = b.stockQuantity || 0;
+          aValue = a.stock || 0;
+          bValue = b.stock || 0;
           break;
         case 'created':
           aValue = new Date(a.createdAt || 0).getTime();
           bValue = new Date(b.createdAt || 0).getTime();
           break;
         default:
-          aValue = a.name?.toLowerCase() || '';
-          bValue = b.name?.toLowerCase() || '';
+          aValue = a.title?.toLowerCase() || '';
+          bValue = b.title?.toLowerCase() || '';
       }
 
       if (sortOrder === 'asc') {
@@ -257,8 +257,8 @@ export default function ProductsPage() {
           {/* Stats */}
           <div className="mt-4 flex items-center gap-6 text-sm text-gray-600">
             <span>Total: {filteredProducts.length} products</span>
-            <span>In Stock: {filteredProducts.filter(p => (p.stockQuantity || 0) > 0).length}</span>
-            <span>Out of Stock: {filteredProducts.filter(p => (p.stockQuantity || 0) === 0).length}</span>
+            <span>In Stock: {filteredProducts.filter(p => (p.stock || 0) > 0).length}</span>
+            <span>Out of Stock: {filteredProducts.filter(p => (p.stock || 0) === 0).length}</span>
           </div>
         </CardContent>
       </Card>
@@ -287,8 +287,8 @@ export default function ProductsPage() {
                 <Card key={product._id} className="overflow-hidden hover:shadow-lg transition-shadow">
                   <div className="relative aspect-square">
                     <Image
-                      src={product.images?.[0] || '/placeholder-product.jpg'}
-                      alt={product.name || 'Product'}
+                      src={product.image || '/placeholder-product.jpg'}
+                      alt={product.title || 'Product'}
                       fill
                       className="object-cover"
                     />
@@ -307,18 +307,18 @@ export default function ProductsPage() {
                     </div>
                   </div>
                   <CardContent className="p-4">
-                    <h3 className="font-semibold text-gray-900 truncate">{product.name}</h3>
-                    <p className="text-sm text-gray-500 mb-2">{product.category}</p>
+                    <h3 className="font-semibold text-gray-900 truncate">{product.title}</h3>
+                    <p className="text-sm text-gray-500 mb-2">{product.categories?.[0] || 'No category'}</p>
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-lg">{formatCurrency(product.price || 0)}</span>
                       <span className={`px-2 py-1 text-xs rounded-full ${
-                        (product.stockQuantity || 0) > 10 
+                        (product.stock || 0) > 10 
                           ? 'bg-green-100 text-green-800' 
-                          : (product.stockQuantity || 0) > 0 
+                          : (product.stock || 0) > 0 
                           ? 'bg-yellow-100 text-yellow-800' 
                           : 'bg-red-100 text-red-800'
                       }`}>
-                        {product.stockQuantity || 0} in stock
+                        {product.stock || 0} in stock
                       </span>
                     </div>
                   </CardContent>

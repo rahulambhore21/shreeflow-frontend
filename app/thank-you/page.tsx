@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, Package, Truck, Phone, Mail, ArrowRight, Home, ShoppingBag } from "lucide-react";
@@ -9,7 +9,7 @@ import { useSearchParams } from 'next/navigation';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-export default function ThankYouPage() {
+function ThankYouContent() {
   const searchParams = useSearchParams();
   const [orderDetails, setOrderDetails] = useState({
     orderId: searchParams.get('orderId') || 'SF' + Date.now(),
@@ -185,5 +185,13 @@ export default function ThankYouPage() {
 
       <Footer />
     </main>
+  );
+}
+
+export default function ThankYouPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <ThankYouContent />
+    </Suspense>
   );
 }

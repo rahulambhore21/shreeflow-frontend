@@ -41,9 +41,7 @@ export default function OrdersPage() {
     try {
       setIsLoading(true);
       const response = await adminOrderService.getAllOrders({ 
-        limit: 100,
-        sortBy: 'createdAt',
-        sortOrder: 'desc'
+        limit: 100
       });
       setOrders(response.data);
     } catch (error) {
@@ -64,9 +62,9 @@ export default function OrdersPage() {
     // Search filter
     if (searchTerm) {
       filtered = filtered.filter(order =>
-        order.orderId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.user?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.shippingAddress?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+        order._id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.customer?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.customer?.name?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -101,7 +99,9 @@ export default function OrdersPage() {
 
   const handleStatusUpdate = async (orderId: string, newStatus: string) => {
     try {
-      await adminOrderService.updateOrderStatus(orderId, newStatus);
+      await adminOrderService.updateOrderStatus(orderId, { 
+        status: newStatus as 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled' 
+      });
       await fetchOrders();
       toast({
         title: 'Success',
@@ -161,11 +161,11 @@ export default function OrdersPage() {
     return {
       total: orders.length,
       pending: orders.filter(o => o.status === 'pending').length,
-      processing: orders.filter(o => o.status === 'processing').length,
+      processing: orders.filter(o => o.status === 'paid').length,
       shipped: orders.filter(o => o.status === 'shipped').length,
       delivered: orders.filter(o => o.status === 'delivered').length,
       cancelled: orders.filter(o => o.status === 'cancelled').length,
-      totalRevenue: orders.reduce((sum, order) => sum + (order.totalAmount || 0), 0)
+      totalRevenue: orders.reduce((sum, order) => sum + (order.amount || 0), 0)
     };
   };
 
@@ -366,14 +366,14 @@ export default function OrdersPage() {
                   {filteredOrders.map((order) => (
                     <tr key={order._id} className="border-b border-gray-100 hover:bg-gray-50">
                       <td className="py-4 px-4">
-                        <span className="font-mono text-sm">#{order.orderId}</span>
+                        <span className="font-mono text-sm">#{order._id}</span>
                       </td>
                       <td className="py-4 px-4">
                         <div>
                           <p className="font-medium text-gray-900">
-                            {order.shippingAddress?.name || 'Guest'}
+                            {order.customer?.name || 'Guest'}
                           </p>
-                          <p className="text-sm text-gray-500">{order.user?.email}</p>
+                          <p className="text-sm text-gray-500">{order.customer?.email}</p>
                         </div>
                       </td>
                       <td className="py-4 px-4">
@@ -382,7 +382,7 @@ export default function OrdersPage() {
                         </div>
                       </td>
                       <td className="py-4 px-4">
-                        <span className="font-semibold">{formatCurrency(order.totalAmount || 0)}</span>
+                        <span className="font-semibold">{formatCurrency(order.amount || 0)}</span>
                       </td>
                       <td className="py-4 px-4">
                         <span className={getStatusBadge(order.status)}>
@@ -413,7 +413,7 @@ export default function OrdersPage() {
                               <Package className="w-4 h-4" />
                             </Button>
                           )}
-                          {order.status === 'processing' && (
+                          {order.status === 'paid' && (
                             <Button 
                               variant="ghost" 
                               size="sm"
