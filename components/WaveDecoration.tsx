@@ -1,11 +1,11 @@
 const WaveDecoration = ({ className = "", flip = false }: { className?: string; flip?: boolean }) => {
   return (
     <div className={`absolute left-0 right-0 overflow-hidden pointer-events-none ${className}`}>
-      {/* Main waves with blue water colors */}
+      {/* Main animated waves with blue water colors */}
       <svg
         viewBox="0 0 1200 120"
         preserveAspectRatio="none"
-        className={`relative block w-full h-16 md:h-20 ${flip ? "rotate-180" : ""}`}
+        className={`relative block w-full h-16 md:h-20 animate-[wave-float_4s_ease-in-out_infinite] ${flip ? "rotate-180" : ""}`}
         fill="url(#waveGradient1)"
       >
         <defs>
@@ -25,15 +25,23 @@ const WaveDecoration = ({ className = "", flip = false }: { className?: string; 
         <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" />
       </svg>
       
-      {/* Secondary wave layer */}
+      {/* Secondary wave layer with different blue gradient */}
       <svg
         viewBox="0 0 1200 120"
         preserveAspectRatio="none"
-        className={`absolute top-0 left-0 w-full h-16 md:h-20 ${flip ? "rotate-180" : ""}`}
+        className={`absolute top-0 left-0 w-full h-16 md:h-20 animate-[wave-float_6s_ease-in-out_infinite] ${flip ? "rotate-180" : ""}`}
         fill="url(#waveGradient2)"
+        style={{ animationDelay: "2s" }}
       >
         <path d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,165.3C1248,171,1344,149,1392,138.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"/>
       </svg>
+
+      {/* Floating water droplets */}
+      <div className="absolute inset-0">
+        <div className="absolute top-4 left-1/4 w-2 h-2 bg-blue-400/30 rounded-full animate-[bubble-float_3s_ease-in-out_infinite]"></div>
+        <div className="absolute top-8 right-1/3 w-1.5 h-1.5 bg-sky-400/25 rounded-full animate-[bubble-float_4s_ease-in-out_infinite]" style={{ animationDelay: "1s" }}></div>
+        <div className="absolute bottom-6 left-2/3 w-3 h-3 bg-cyan-400/20 rounded-full animate-[bubble-float_5s_ease-in-out_infinite]" style={{ animationDelay: "2s" }}></div>
+      </div>
     </div>
   );
 };

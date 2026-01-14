@@ -1,9 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Star, ShoppingCart, Eye } from "lucide-react";
+import { ArrowRight, Star, ShoppingCart, Eye, Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useLocalCart } from "@/context/LocalCartContext";
+import { useRouter } from "next/navigation";
 
 interface ProductCardProps {
   id: number;
@@ -30,11 +32,24 @@ const ProductCard = ({
   description,
   features,
 }: ProductCardProps) => {
+  const { addToCart, isLoading } = useLocalCart();
+  const router = useRouter();
+
   const scrollToContact = () => {
     const element = document.querySelector("#contact");
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
+  };
+
+  const handleAddToCart = async () => {
+    await addToCart({
+      productId: id.toString(),
+      title: name,
+      price: price,
+      image: image,
+      stock: 100 // Default stock value for ProductCard
+    });
   };
 
   return (
@@ -107,7 +122,7 @@ const ProductCard = ({
           <ul className="space-y-1">
             {features.slice(0, 3).map((feature, index) => (
               <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
-                <span className="text-blue-600 mt-0.5 flex-shrink-0">✓</span>
+                <span className="text-blue-600 mt-0.5 shrink-0">✓</span>
                 <span className="line-clamp-1">{feature}</span>
               </li>
             ))}
@@ -133,14 +148,28 @@ const ProductCard = ({
             </Button>
           </Link>
           
-          <Button
-            size="lg"
-            onClick={scrollToContact}
-            className="w-full bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700 gap-2"
-          >
-            <ShoppingCart className="w-4 h-4" />
-            Buy Now
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              size="lg"
+              onClick={handleAddToCart}
+              disabled={isLoading}
+              variant="outline"
+              className="flex-1 border-2 border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              {isLoading ? 'Adding...' : 'Add to Cart'}
+            </Button>
+            
+            <Button
+              size="lg"
+              onClick={handleAddToCart}
+              disabled={isLoading}
+              className="flex-1 bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700 gap-2"
+            >
+              <ShoppingCart className="w-4 h-4" />
+              {isLoading ? 'Adding...' : 'Buy Now'}
+            </Button>
+          </div>
         </div>
       </div>
     </div>

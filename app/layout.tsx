@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { LocalCartProvider } from "@/context/LocalCartContext";
+import { AuthProvider } from "@/context/AuthContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,6 +14,11 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+export const metadata: Metadata = {
+  title: "Shree Flow - Water Level Controllers",
+  description: "Automatic water level controllers for homes and businesses",
+};
 
 export default function RootLayout({
   children,
@@ -40,8 +47,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
-        <Toaster />
+        <AuthProvider>
+          <LocalCartProvider>
+            {children}
+            <Toaster />
+          </LocalCartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

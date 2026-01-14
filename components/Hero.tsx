@@ -3,9 +3,12 @@
 import { Check, ArrowRight, Droplets, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import WaveDecoration from "./WaveDecoration";
 
 const Hero = () => {
+  const router = useRouter();
+  
   const benefits = [
     "Automatic motor ON / OFF",
     "Works with overhead & underground tanks",
@@ -56,7 +59,7 @@ const Hero = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Button
                 size="lg"
-                onClick={() => scrollToSection("#contact")}
+                onClick={() => router.push('/products')}
                 className="bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700 gap-2 shadow-lg shadow-blue-500/30 font-semibold px-8 py-3 relative overflow-hidden group"
               >
                 Buy Now - ₹2,999
