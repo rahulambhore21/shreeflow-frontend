@@ -62,7 +62,7 @@ export default function ProductViewPage({ params }: PageProps) {
     try {
       setIsLoading(true);
       const response = await productService.getProductById(resolvedParams.id);
-      setProduct(response.data);
+      setProduct(response);
     } catch (error: any) {
       toast({
         title: "Error",
