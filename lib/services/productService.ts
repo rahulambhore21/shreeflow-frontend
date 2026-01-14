@@ -65,8 +65,15 @@ class ProductService {
   }
 
   async createProduct(productData: Omit<Product, '_id' | 'createdAt' | 'updatedAt'>): Promise<Product> {
-    const response = await api.post('/products', productData);
-    return response.data.data;
+    try {
+      console.log('Creating product with data:', productData);
+      const response = await api.post('/products', productData);
+      console.log('Product creation response:', response.data);
+      return response.data.data || response.data.savedProduct;
+    } catch (error: any) {
+      console.error('Error in createProduct service:', error);
+      throw error;
+    }
   }
 
   async updateProduct(id: string, productData: Partial<Product>): Promise<Product> {
