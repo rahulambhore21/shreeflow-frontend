@@ -58,21 +58,18 @@ const Header = () => {
       }`}
     >
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg">
+          <Link href="/" className="flex items-center">
+            <div className="w-32 h-16 p-1 bg-white rounded-xl shadow-lg">
               <Image
                 src="/logo.png"
                 alt="Shree Flow Logo"
-                width={40}
-                height={40}
-                className="w-full h-full object-cover"
+                width={120}
+                height={56}
+                className="w-full h-full object-contain"
               />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-sky-600 bg-clip-text text-transparent">
-              Shree Flow
-            </span>
           </Link>
 
           {/* Desktop Navigation */}

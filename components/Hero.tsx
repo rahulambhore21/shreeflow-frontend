@@ -56,7 +56,7 @@ const Hero = () => {
             </ul>
 
             {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            {/* <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Button
                 size="lg"
                 onClick={() => router.push('/products')}
@@ -74,7 +74,7 @@ const Hero = () => {
                 <ShoppingCart className="w-4 h-4" />
                 View Products
               </Button>
-            </div>
+            </div> */}
           </div>
 
           {/* Product Image */}
