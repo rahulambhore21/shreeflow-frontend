@@ -19,14 +19,14 @@ const Contact = () => {
     {
       icon: Phone,
       label: "Phone",
-      value: "+91 98765 43210",
-      href: "tel:+919876543210",
+      value: "7419346490 / 9599268300",
+      href: "tel:+917419346490",
     },
     {
       icon: MessageCircle,
       label: "WhatsApp",
-      value: "+91 98765 43210",
-      href: "https://wa.me/919876543210",
+      value: "7419346490 / 9599268300",
+      href: "https://wa.me/917419346490",
     },
     {
       icon: Mail,
