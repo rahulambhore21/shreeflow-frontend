@@ -74,14 +74,14 @@ const Footer = () => {
               <li className="flex items-start gap-3">
                 <Mail className="w-4 h-4 text-background/70 mt-0.5 flex-shrink-0" />
                 <a href="mailto:sales@shreeflow.com" className="text-background/70 hover:text-background transition-colors text-sm">
-                  sales@shreeflow.com
+                  tanwarblossomenterprses2024@gmail.com
                 </a>
               </li>
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-background/70 mt-0.5 flex-shrink-0" />
                 <span className="text-background/70 text-sm">
-                  Industrial Area, Sector 5,<br />
-                  New Delhi, India
+                  1153/a sector 4,7 chowk new railway road<br />
+                  Dayanand colony Gurugram 122001
                 </span>
               </li>
             </ul>

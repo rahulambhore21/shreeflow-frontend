@@ -31,13 +31,13 @@ const Contact = () => {
     {
       icon: Mail,
       label: "Email",
-      value: "sales@shreeflow.com",
+      value: "tanwarblossomenterprses2024@gmail.com",
       href: "mailto:sales@shreeflow.com",
     },
     {
       icon: MapPin,
       label: "Address",
-      value: "Industrial Area, Sector 5, New Delhi, India",
+      value: "1153/a sector 4,7 chowk new railway road Dayanand colony Gurugram 122001",
       href: null,
     },
   ];

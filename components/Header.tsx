@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ShoppingCart, Phone, Droplets } from "lucide-react";
+import { Menu, X, ShoppingCart, Phone } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useLocalCart } from "@/context/LocalCartContext";
 import { useRouter } from "next/navigation";
 
@@ -60,8 +61,14 @@ const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-sky-600 rounded-xl flex items-center justify-center shadow-lg">
-              <Droplets className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg">
+              <Image
+                src="/logo.png"
+                alt="Shree Flow Logo"
+                width={40}
+                height={40}
+                className="w-full h-full object-cover"
+              />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-sky-600 bg-clip-text text-transparent">
               Shree Flow
