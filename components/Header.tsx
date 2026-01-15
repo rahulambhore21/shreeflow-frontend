@@ -25,6 +25,7 @@ const Header = () => {
   const navigationItems = [
     { label: "Home", href: "/" },
     { label: "Products", href: "/products" },
+    { label: "Articles", href: "/articles" },
     { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },
     // Add admin link - you can add authentication check here

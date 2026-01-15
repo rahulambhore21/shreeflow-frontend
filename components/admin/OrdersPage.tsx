@@ -14,9 +14,12 @@ import {
   Clock,
   X,
   Download,
-  RefreshCw
+  RefreshCw,
+  Send,
+  MapPin
 } from "lucide-react";
 import { adminOrderService, OrderWithProducts } from "@/lib/services/adminOrderService";
+import { shippingService } from "@/lib/services/shippingService";
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from 'next/navigation';
 
@@ -107,11 +110,52 @@ export default function OrdersPage() {
         title: 'Success',
         description: 'Order status updated successfully',
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating order status:', error);
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to update order status';
       toast({
         title: 'Error',
-        description: 'Failed to update order status',
+        description: errorMessage,
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleCreateShipment = async (orderId: string) => {
+    try {
+      const response = await shippingService.createShipment(orderId);
+      if (response.type === 'success') {
+        await fetchOrders();
+        toast({
+          title: 'Success',
+          description: 'Shipment created successfully in Shiprocket',
+        });
+      }
+    } catch (error: any) {
+      console.error('Error creating shipment:', error);
+      toast({
+        title: 'Error',
+        description: error.response?.data?.message || 'Failed to create shipment',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleTrackShipment = async (orderId: string) => {
+    try {
+      const response = await shippingService.trackShipment(orderId);
+      if (response.type === 'success') {
+        const tracking = response.data.trackingData;
+        toast({
+          title: 'Tracking Info',
+          description: `Status: ${tracking.current_status || 'Unknown'}${tracking.last_location ? ` at ${tracking.last_location}` : ''}`,
+        });
+      }
+    } catch (error: any) {
+      console.error('Error tracking shipment:', error);
+      toast({
+        title: 'Error',
+        description: error.response?.data?.message || 'Failed to track shipment',
         variant: 'destructive',
       });
     }
@@ -123,6 +167,12 @@ export default function OrdersPage() {
         return <CheckCircle className="w-4 h-4" />;
       case 'shipped':
         return <Truck className="w-4 h-4" />;
+      case 'paid':
+        return <Package className="w-4 h-4" />;
+      case 'confirmed':
+        return <CheckCircle className="w-4 h-4" />;
+      case 'pending':
+        return <Clock className="w-4 h-4" />;
       case 'processing':
         return <Package className="w-4 h-4" />;
       case 'cancelled':
@@ -140,7 +190,7 @@ export default function OrdersPage() {
         return `${baseClasses} bg-green-100 text-green-800`;
       case 'shipped':
         return `${baseClasses} bg-blue-100 text-blue-800`;
-      case 'processing':
+      case 'paid':
         return `${baseClasses} bg-yellow-100 text-yellow-800`;
       case 'cancelled':
         return `${baseClasses} bg-red-100 text-red-800`;
@@ -229,7 +279,7 @@ export default function OrdersPage() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Processing</p>
+                <p className="text-sm text-gray-600">Paid</p>
                 <p className="text-2xl font-bold text-yellow-600">{stats.processing}</p>
               </div>
               <Package className="w-8 h-8 text-yellow-400" />
@@ -401,6 +451,7 @@ export default function OrdersPage() {
                             variant="ghost" 
                             size="sm" 
                             onClick={() => router.push(`/admin/orders/${order._id}`)}
+                            title="View Order Details"
                           >
                             <Eye className="w-4 h-4" />
                           </Button>
@@ -408,9 +459,21 @@ export default function OrdersPage() {
                             <Button 
                               variant="ghost" 
                               size="sm"
-                              onClick={() => handleStatusUpdate(order._id, 'processing')}
+                              onClick={() => handleStatusUpdate(order._id, 'paid')}
+                              title="Mark as Paid"
                             >
                               <Package className="w-4 h-4" />
+                            </Button>
+                          )}
+                          {order.status === 'paid' && !order.shipment_id && (
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => handleCreateShipment(order._id)}
+                              title="Create Shiprocket Shipment"
+                              className="text-blue-600 hover:text-blue-700"
+                            >
+                              <Truck className="w-4 h-4" />
                             </Button>
                           )}
                           {order.status === 'paid' && (
@@ -418,8 +481,20 @@ export default function OrdersPage() {
                               variant="ghost" 
                               size="sm"
                               onClick={() => handleStatusUpdate(order._id, 'shipped')}
+                              title="Mark as Shipped"
                             >
-                              <Truck className="w-4 h-4" />
+                              <CheckCircle className="w-4 h-4" />
+                            </Button>
+                          )}
+                          {order.shipment_id && (
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => handleTrackShipment(order._id)}
+                              title="Track Shipment"
+                              className="text-green-600 hover:text-green-700"
+                            >
+                              <Search className="w-4 h-4" />
                             </Button>
                           )}
                         </div>

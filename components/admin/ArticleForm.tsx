@@ -8,8 +8,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import api from '@/lib/services/api';
+import { articleService } from '@/lib/services/articleService';
 import ImageUpload from './ImageUpload';
+import RichTextEditor from './RichTextEditor';
 import { 
   ArrowLeft,
   Save,
@@ -75,26 +76,23 @@ export default function ArticleForm({ mode, articleId }: ArticleFormProps) {
   const loadArticle = async () => {
     try {
       setIsFetching(true);
-      const response = await api.get(`/articles/${articleId}`);
+      const article = await articleService.getArticleById(articleId!);
       
-      if (response.data.type === 'success') {
-        const article = response.data.data;
-        setFormData({
-          title: article.title || '',
-          slug: article.slug || '',
-          excerpt: article.excerpt || '',
-          content: article.content || '',
-          featuredImage: article.featuredImage || '',
-          status: article.status || 'draft',
-          tags: article.tags || [],
-          categories: article.categories || []
-        });
-      }
-    } catch (error) {
+      setFormData({
+        title: article.title || '',
+        slug: article.slug || '',
+        excerpt: article.excerpt || '',
+        content: article.content || '',
+        featuredImage: article.featuredImage || '',
+        status: article.status || 'draft',
+        tags: article.tags || [],
+        categories: article.categories || []
+      });
+    } catch (error: any) {
       console.error('Error loading article:', error);
       toast({
         title: "Error",
-        description: "Failed to load article details",
+        description: error.message || "Failed to load article details",
         variant: "destructive",
       });
       router.push('/admin/articles');
@@ -106,34 +104,43 @@ export default function ArticleForm({ mode, articleId }: ArticleFormProps) {
   const validateForm = (): boolean => {
     const newErrors: Partial<Record<keyof ArticleFormData, string>> = {};
 
+    // Title validation (backend requires 5-200 characters)
     if (!formData.title.trim()) {
       newErrors.title = 'Title is required';
-    } else if (formData.title.length < 3) {
-      newErrors.title = 'Title must be at least 3 characters';
+    } else if (formData.title.length < 5) {
+      newErrors.title = 'Title must be at least 5 characters';
+    } else if (formData.title.length > 200) {
+      newErrors.title = 'Title must not exceed 200 characters';
     }
 
+    // Slug validation
     if (!formData.slug.trim()) {
       newErrors.slug = 'Slug is required';
     } else if (formData.slug.length < 3) {
       newErrors.slug = 'Slug must be at least 3 characters';
     }
 
-    if (!formData.excerpt.trim()) {
-      newErrors.excerpt = 'Excerpt is required';
-    } else if (formData.excerpt.length < 10) {
-      newErrors.excerpt = 'Excerpt must be at least 10 characters';
-    }
-
+    // Content validation (backend requires at least 50 characters)
     if (!formData.content.trim()) {
       newErrors.content = 'Content is required';
     } else if (formData.content.length < 50) {
       newErrors.content = 'Content must be at least 50 characters';
     }
 
+    // Excerpt validation
+    if (!formData.excerpt.trim()) {
+      newErrors.excerpt = 'Excerpt is required';
+    } else if (formData.excerpt.length < 10) {
+      newErrors.excerpt = 'Excerpt must be at least 10 characters';
+    } else if (formData.excerpt.length > 300) {
+      newErrors.excerpt = 'Excerpt must not exceed 300 characters';
+    }
+
+    // Featured image validation (backend requires valid URL)
     if (!formData.featuredImage.trim()) {
       newErrors.featuredImage = 'Featured image URL is required';
     } else if (!isValidUrl(formData.featuredImage)) {
-      newErrors.featuredImage = 'Please enter a valid URL';
+      newErrors.featuredImage = 'Please enter a valid image URL';
     }
 
     setErrors(newErrors);
@@ -164,14 +171,22 @@ export default function ArticleForm({ mode, articleId }: ArticleFormProps) {
     try {
       setIsLoading(true);
 
+      // Debug: Log the form data being sent
+      console.log('Submitting article data:', {
+        ...formData,
+        titleLength: formData.title.length,
+        contentLength: formData.content.length,
+        excerptLength: formData.excerpt.length
+      });
+
       if (mode === 'create') {
-        await api.post('/articles', formData);
+        await articleService.createArticle(formData);
         toast({
           title: "Success",
           description: "Article created successfully",
         });
       } else {
-        await api.put(`/articles/${articleId}`, formData);
+        await articleService.updateArticle(articleId!, formData);
         toast({
           title: "Success",
           description: "Article updated successfully",
@@ -188,14 +203,14 @@ export default function ArticleForm({ mode, articleId }: ArticleFormProps) {
       
       if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
-      } else if (error.response?.data?.error) {
-        errorMessage = error.response.data.error;
-      } else if (error.response?.data?.errors) {
-        // Handle validation errors
-        const errors = error.response.data.errors;
-        errorMessage = Array.isArray(errors) 
-          ? errors.map((e: any) => e.msg || e.message).join(', ')
-          : JSON.stringify(errors);
+        
+        // If there are specific validation errors, show them
+        if (error.response.data.errors && Array.isArray(error.response.data.errors)) {
+          const validationErrors = error.response.data.errors;
+          errorMessage = `Validation failed:\n${validationErrors.join('\n')}`;
+        }
+      } else if (error.message) {
+        errorMessage = error.message;
       }
       
       toast({
@@ -308,6 +323,9 @@ export default function ArticleForm({ mode, articleId }: ArticleFormProps) {
                   {errors.title && (
                     <p className="text-sm text-red-600 mt-1">{errors.title}</p>
                   )}
+                  <p className="text-sm text-gray-500 mt-1">
+                    {formData.title.length}/200 characters (minimum 5 required)
+                  </p>
                 </div>
 
                 <div>
@@ -344,27 +362,17 @@ export default function ArticleForm({ mode, articleId }: ArticleFormProps) {
                   {errors.excerpt && (
                     <p className="text-sm text-red-600 mt-1">{errors.excerpt}</p>
                   )}
-                </div>
-
-                <div>
-                  <Label htmlFor="content">
-                    Content <span className="text-red-500">*</span>
-                  </Label>
-                  <Textarea
-                    id="content"
-                    value={formData.content}
-                    onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                    placeholder="Write your article content here..."
-                    rows={15}
-                    className="mt-1"
-                  />
-                  {errors.content && (
-                    <p className="text-sm text-red-600 mt-1">{errors.content}</p>
-                  )}
                   <p className="text-sm text-gray-500 mt-1">
-                    {formData.content.length} characters
+                    {formData.excerpt.length}/300 characters (minimum 10 required)
                   </p>
                 </div>
+
+                <RichTextEditor
+                  value={formData.content}
+                  onChange={(content) => setFormData({ ...formData, content })}
+                  placeholder="Write your article content here..."
+                  error={errors.content}
+                />
               </CardContent>
             </Card>
 

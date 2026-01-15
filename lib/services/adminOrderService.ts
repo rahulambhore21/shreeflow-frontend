@@ -112,8 +112,19 @@ class AdminOrderService {
       estimated_delivery?: string;
     }
   ): Promise<OrderWithProducts> {
-    const response = await api.put(`/orders/admin/${orderId}/status`, data);
-    return response.data.data;
+    try {
+      console.log('Updating order status:', { orderId, data });
+      const response = await api.put(`/orders/admin/${orderId}/status`, data);
+      return response.data.data;
+    } catch (error: any) {
+      console.error('Error updating order status:', {
+        orderId,
+        data,
+        error: error.response?.data || error.message,
+        status: error.response?.status
+      });
+      throw error;
+    }
   }
 
   async getOrderAnalytics(): Promise<OrderAnalytics> {

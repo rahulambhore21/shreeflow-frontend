@@ -16,7 +16,8 @@ import {
   LogOut,
   Menu,
   X,
-  User
+  User,
+  Ship
 } from 'lucide-react';
 
 interface AdminLayoutProps {
@@ -30,11 +31,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const { user, logout } = useAuth();
 
   const navigation = [
-    { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
     { name: 'Products', href: '/admin/products', icon: Package },
     { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
     { name: 'Articles', href: '/admin/articles', icon: FileText },
     { name: 'Shipping', href: '/admin/shipping', icon: Truck },
+    { name: 'Shiprocket', href: '/admin/shiprocket', icon: Ship },
     { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
     { name: 'Settings', href: '/admin/settings', icon: Settings },
   ];

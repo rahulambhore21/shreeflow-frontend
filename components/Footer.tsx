@@ -25,15 +25,16 @@ const Footer = () => {
           {/* Brand */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-background to-background/80 rounded-lg flex items-center justify-center">
-                <span className="text-foreground font-bold text-lg">SF</span>
-              </div>
-              <span className="text-xl font-semibold text-background">
-                Shree Flow
-              </span>
+              <img
+                src="/logo.png"
+                alt="Shree Flow Logo"
+                className="w-40 h-40 object-contain"
+              />
             </div>
             <p className="text-background/70 mb-4 max-w-md">
-              Shree Flow manufactures reliable automatic water level controllers for overhead and underground water tanks. Trusted by homeowners and electricians across India.
+              Shree Flow manufactures reliable automatic water level controllers for
+              overhead and underground water tanks. Trusted by homeowners and
+              electricians across India.
             </p>
             <p className="text-sm text-background/50">
               🇮🇳 Proudly Made in India
@@ -67,20 +68,27 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-start gap-3">
                 <Phone className="w-4 h-4 text-background/70 mt-0.5 flex-shrink-0" />
-                <a href="tel:+917419346490" className="text-background/70 hover:text-background transition-colors text-sm">
+                <a
+                  href="tel:+917419346490"
+                  className="text-background/70 hover:text-background transition-colors text-sm"
+                >
                   7419346490 / 9599268300
                 </a>
               </li>
               <li className="flex items-start gap-3">
                 <Mail className="w-4 h-4 text-background/70 mt-0.5 flex-shrink-0" />
-                <a href="mailto:sales@shreeflow.com" className="text-background/70 hover:text-background transition-colors text-sm">
+                <a
+                  href="mailto:sales@shreeflow.com"
+                  className="text-background/70 hover:text-background transition-colors text-sm"
+                >
                   tanwarblossomenterprses2024@gmail.com
                 </a>
               </li>
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-background/70 mt-0.5 flex-shrink-0" />
                 <span className="text-background/70 text-sm">
-                  1153/a sector 4,7 chowk new railway road<br />
+                  1153/a sector 4,7 chowk new railway road
+                  <br />
                   Dayanand colony Gurugram 122001
                 </span>
               </li>

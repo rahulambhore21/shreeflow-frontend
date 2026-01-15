@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import api from '@/lib/services/api';
+import { articleService } from '@/lib/services/articleService';
 import { 
   Plus, 
   Search, 
@@ -21,26 +21,7 @@ import {
   FileText
 } from 'lucide-react';
 
-interface Article {
-  _id: string;
-  title: string;
-  slug: string;
-  excerpt: string;
-  content: string;
-  featuredImage: string;
-  author: {
-    _id: string;
-    username: string;
-  };
-  status: 'draft' | 'published' | 'archived';
-  tags: string[];
-  categories: string[];
-  views: number;
-  likes: number;
-  publishedAt: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { Article } from '@/lib/services/articleService';
 
 export default function ArticlesPage() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -64,15 +45,13 @@ export default function ArticlesPage() {
   const loadArticles = async () => {
     try {
       setIsLoading(true);
-      const response = await api.get('/articles');
-      if (response.data.type === 'success') {
-        setArticles(response.data.data || []);
-      }
+      const response = await articleService.getAllArticles();
+      setArticles(response.data || []);
     } catch (error: any) {
       console.error('Error loading articles:', error);
       toast({
         title: 'Error',
-        description: error.response?.data?.message || 'Failed to load articles',
+        description: error.message || 'Failed to load articles',
         variant: 'destructive',
       });
       setArticles([]);
@@ -136,7 +115,7 @@ export default function ArticlesPage() {
     if (!confirm('Are you sure you want to delete this article?')) return;
 
     try {
-      await api.delete(`/articles/${articleId}`);
+      await articleService.deleteArticle(articleId);
       
       setArticles(prev => prev.filter(article => article._id !== articleId));
       toast({
@@ -147,7 +126,7 @@ export default function ArticlesPage() {
       console.error('Error deleting article:', error);
       toast({
         title: "Error",
-        description: error.response?.data?.message || "Failed to delete article",
+        description: error.message || "Failed to delete article",
         variant: "destructive",
       });
     }

@@ -157,10 +157,7 @@ function ThankYouContent() {
               </Button>
             </Link>
 
-            <Button size="lg" variant="outline" className="gap-2">
-              <Mail className="w-5 h-5" />
-              Track Your Order
-            </Button>
+          
           </div>
 
           {/* Customer Service */}

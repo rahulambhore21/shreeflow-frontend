@@ -21,6 +21,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { articleService } from '@/lib/services/articleService';
 import api from '@/lib/services/api';
 
 interface PageProps {
@@ -29,27 +30,8 @@ interface PageProps {
   }>;
 }
 
-interface Article {
-  _id: string;
-  title: string;
-  slug: string;
-  content: string;
-  excerpt: string;
-  featuredImage: string;
-  author: {
-    _id: string;
-    username: string;
-    email: string;
-  };
-  status: 'draft' | 'published' | 'archived';
-  tags: string[];
-  categories: string[];
-  views: number;
-  likes: number;
-  publishedAt: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { Article } from '@/lib/services/articleService';
+
 
 export default function ArticleViewPage({ params }: PageProps) {
   const resolvedParams = use(params);
@@ -67,12 +49,12 @@ export default function ArticleViewPage({ params }: PageProps) {
   const fetchArticle = async () => {
     try {
       setIsLoading(true);
-      const response = await api.get(`/articles/${resolvedParams.id}`);
-      setArticle(response.data.data);
+      const article = await articleService.getArticleById(resolvedParams.id);
+      setArticle(article);
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.response?.data?.message || "Failed to load article",
+        description: error.message || "Failed to load article",
         variant: "destructive",
       });
       router.push('/admin/articles');
@@ -84,7 +66,7 @@ export default function ArticleViewPage({ params }: PageProps) {
   const handleDelete = async () => {
     try {
       setIsDeleting(true);
-      await api.delete(`/articles/${resolvedParams.id}`);
+      await articleService.deleteArticle(resolvedParams.id);
       
       toast({
         title: "Success",
@@ -95,7 +77,7 @@ export default function ArticleViewPage({ params }: PageProps) {
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.response?.data?.message || "Failed to delete article",
+        description: error.message || "Failed to delete article",
         variant: "destructive",
       });
     } finally {

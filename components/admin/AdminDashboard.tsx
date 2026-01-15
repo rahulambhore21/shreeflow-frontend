@@ -29,8 +29,6 @@ interface DashboardStats {
   totalOrders: number;
   totalCustomers: number;
   totalRevenue: number;
-  newOrdersToday: number;
-  revenueToday: number;
   topSellingProducts: any[];
   recentOrders: any[];
   monthlyRevenue: number[];
@@ -43,8 +41,6 @@ export default function AdminDashboard() {
     totalOrders: 0,
     totalCustomers: 0,
     totalRevenue: 0,
-    newOrdersToday: 0,
-    revenueToday: 0,
     topSellingProducts: [],
     recentOrders: [],
     monthlyRevenue: [],
@@ -69,22 +65,39 @@ export default function AdminDashboard() {
         adminOrderService.getAllOrders({ limit: 5 })
       ]);
 
+      // Add null checks and default values
+      const overview = dashboardData?.overview || {};
+      
       setStats({
-        totalProducts: dashboardData.overview.totalProducts,
-        totalOrders: dashboardData.overview.totalOrders,
-        totalCustomers: dashboardData.overview.totalUsers,
-        totalRevenue: dashboardData.overview.totalRevenue,
-        newOrdersToday: 0, // This might need to be calculated from dashboardData
-        revenueToday: 0, // This might need to be calculated from dashboardData
-        topSellingProducts: dashboardData.topProducts || [],
-        recentOrders: ordersData.data,
-        monthlyRevenue: dashboardData.dailyRevenue?.map(d => d.revenue) || [],
-        orderStatusDistribution: Object.entries(dashboardData.ordersByStatus || {}).map(([status, count]) => ({ status, count }))
+        totalProducts: overview.totalProducts || 0,
+        totalOrders: overview.totalOrders || 0,
+        totalCustomers: overview.totalUsers || 0,
+        totalRevenue: overview.totalRevenue || 0,
+        topSellingProducts: dashboardData?.topProducts || [],
+        recentOrders: ordersData?.data || [],
+        monthlyRevenue: dashboardData?.dailyRevenue?.map(d => d?.revenue || 0) || [],
+        orderStatusDistribution: dashboardData?.ordersByStatus 
+          ? Object.entries(dashboardData.ordersByStatus).map(([status, count]) => ({ status, count: count || 0 }))
+          : []
       });
       
-      setRecentProducts(productsData.data);
+      setRecentProducts(productsData?.data || []);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
+      
+      // Set default values on error
+      setStats({
+        totalProducts: 0,
+        totalOrders: 0,
+        totalCustomers: 0,
+        totalRevenue: 0,
+        topSellingProducts: [],
+        recentOrders: [],
+        monthlyRevenue: [],
+        orderStatusDistribution: []
+      });
+      setRecentProducts([]);
+      
       toast({
         title: 'Error',
         description: 'Failed to load dashboard data',
@@ -179,7 +192,7 @@ export default function AdminDashboard() {
                 <p className="text-3xl font-bold text-gray-900">{stats.totalOrders}</p>
                 <p className="text-sm text-blue-600 mt-1">
                   <Activity className="w-4 h-4 inline mr-1" />
-                  {stats.newOrdersToday} new today
+                  All orders
                 </p>
               </div>
               <div className="p-3 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg">

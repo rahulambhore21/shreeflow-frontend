@@ -9,6 +9,7 @@ import Dealers from "@/components/Dealers";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import MobileActions from "@/components/MobileActions";
+import FeaturedArticles from "@/components/articles/FeaturedArticles";
 import "./globals.css";
 
 
@@ -21,6 +22,9 @@ function page() {
       <HowItWorks />
       <ProductDescription />
       <Trust />
+      <div className="container mx-auto px-4 py-16">
+        <FeaturedArticles limit={3} />
+      </div>
       <Dealers />
       <Contact />
       <Footer />
