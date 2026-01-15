@@ -12,12 +12,10 @@ import {
   FileText, 
   Truck, 
   BarChart3, 
-  Settings, 
   LogOut,
   Menu,
   X,
-  User,
-  Ship
+  User
 } from 'lucide-react';
 
 interface AdminLayoutProps {
@@ -35,9 +33,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
     { name: 'Articles', href: '/admin/articles', icon: FileText },
     { name: 'Shipping', href: '/admin/shipping', icon: Truck },
-    { name: 'Shiprocket', href: '/admin/shiprocket', icon: Ship },
     { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
-    { name: 'Settings', href: '/admin/settings', icon: Settings },
   ];
 
   const handleLogout = () => {

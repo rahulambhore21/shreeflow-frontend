@@ -63,7 +63,7 @@ export default function ShippingRateModal({ isOpen, onClose, onSuccess, rate }: 
       };
 
       if (rate) {
-        await shippingService.updateShippingRate(rate._id || rate.id || '', data);
+        await shippingService.updateShippingRate(rate._id, data);
         toast({
           title: "Success",
           description: "Shipping rate updated successfully",

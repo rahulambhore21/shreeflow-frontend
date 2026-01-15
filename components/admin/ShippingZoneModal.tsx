@@ -83,7 +83,7 @@ export default function ShippingZoneModal({ isOpen, onClose, onSuccess, zone }: 
       };
 
       if (zone) {
-        await shippingService.updateShippingZone(zone._id || zone.id || '', data);
+        await shippingService.updateShippingZone(zone._id, data);
         toast({
           title: "Success",
           description: "Shipping zone updated successfully",

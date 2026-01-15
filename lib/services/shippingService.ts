@@ -71,10 +71,10 @@ export const shippingService = {
     return response.data;
   },
 
-  // Shiprocket Integration
+  // ✅ PRODUCTION SAFE: Shiprocket Integration
   saveShiprocketIntegration: async (integrationData: {
     email: string;
-    token: string;
+    password: string;  // ✅ CHANGED: Use password instead of token
   }) => {
     const response = await api.post('/shipping/shiprocket/integration', integrationData);
     return response.data;
@@ -82,6 +82,11 @@ export const shippingService = {
 
   getShiprocketIntegration: async () => {
     const response = await api.get('/shipping/shiprocket/integration');
+    return response.data;
+  },
+
+  checkShiprocketStatus: async () => {
+    const response = await api.get('/shipping/shiprocket/status');  // ✅ CHANGED: Use new status endpoint
     return response.data;
   },
 
@@ -93,11 +98,6 @@ export const shippingService = {
 
   trackShipment: async (orderId: string) => {
     const response = await api.get(`/orders/admin/${orderId}/track`);
-    return response.data;
-  },
-
-  checkShiprocketStatus: async () => {
-    const response = await api.get('/orders/admin/shiprocket/status');
     return response.data;
   },
 
