@@ -142,7 +142,11 @@ const Products = () => {
             {/* Products Grid */}
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 mb-16">
               {products.map((product) => (
-                <div key={product._id} className="bg-white rounded-2xl border border-blue-200/30 shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div 
+                  key={product._id} 
+                  onClick={() => handleViewProduct(product)}
+                  className="bg-white rounded-2xl border border-blue-200/30 shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+                >
                   {/* Product Image */}
                   <div className="aspect-square bg-gradient-to-br from-blue-50 via-sky-50 to-cyan-50 p-6 relative group">
                     <Image
@@ -185,7 +189,10 @@ const Products = () => {
                     <div className="pt-4 border-t border-gray-100">
                       <Button
                         size="sm"
-                        onClick={() => handleAddToCart(product)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddToCart(product);
+                        }}
                         disabled={cartLoading}
                         className="w-full bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700 gap-2"
                       >
