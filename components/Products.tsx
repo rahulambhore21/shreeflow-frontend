@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Shield, Zap, Droplets, Clock, Waves, Plus } from "lucide-react";
+import { ArrowRight, Shield, Zap, Droplets, Clock, Waves, Plus, Star, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import { useLocalCart } from "@/context/LocalCartContext";
 import { useRouter } from "next/navigation";
