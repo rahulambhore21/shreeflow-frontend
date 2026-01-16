@@ -57,18 +57,18 @@ export default function ArticlePageClient() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">
-        <div className="container mx-auto px-4 py-16">
+        <div className="container mx-auto px-4 py-8 sm:py-12 md:py-16">
           <div className="max-w-4xl mx-auto">
             <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-12 text-center">
-                <Loader2 className="w-12 h-12 animate-spin text-blue-600 mx-auto mb-6" />
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">Loading Article</h3>
-                <p className="text-gray-600">Please wait while we fetch your content...</p>
-                <div className="mt-6 flex justify-center">
-                  <div className="animate-pulse flex space-x-4">
-                    <div className="h-2 w-20 bg-blue-200 rounded"></div>
-                    <div className="h-2 w-16 bg-blue-300 rounded"></div>
-                    <div className="h-2 w-24 bg-blue-200 rounded"></div>
+              <CardContent className="p-6 sm:p-8 md:p-12 text-center">
+                <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 animate-spin text-blue-600 mx-auto mb-4 sm:mb-6" />
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2">Loading Article</h3>
+                <p className="text-sm sm:text-base text-gray-600">Please wait while we fetch your content...</p>
+                <div className="mt-4 sm:mt-6 flex justify-center">
+                  <div className="animate-pulse flex space-x-3 sm:space-x-4">
+                    <div className="h-2 w-16 sm:w-20 bg-blue-200 rounded"></div>
+                    <div className="h-2 w-12 sm:w-16 bg-blue-300 rounded"></div>
+                    <div className="h-2 w-20 sm:w-24 bg-blue-200 rounded"></div>
                   </div>
                 </div>
               </CardContent>
@@ -82,23 +82,23 @@ export default function ArticlePageClient() {
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50">
-        <div className="container mx-auto px-4 py-16">
+        <div className="container mx-auto px-4 py-8 sm:py-12 md:py-16">
           <div className="max-w-2xl mx-auto">
             <Card className="shadow-lg border-0 bg-white/90 backdrop-blur-sm">
-              <CardContent className="p-12 text-center">
-                <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-6" />
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">Something went wrong</h2>
-                <p className="text-red-600 mb-2 font-medium">Error loading article</p>
-                <p className="text-gray-600 text-sm mb-8 max-w-md mx-auto">{error}</p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <CardContent className="p-6 sm:p-8 md:p-12 text-center">
+                <AlertCircle className="w-12 h-12 sm:w-16 sm:h-16 text-red-500 mx-auto mb-4 sm:mb-6" />
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-4">Something went wrong</h2>
+                <p className="text-red-600 mb-1 sm:mb-2 font-medium text-sm sm:text-base">Error loading article</p>
+                <p className="text-gray-600 text-xs sm:text-sm mb-6 sm:mb-8 max-w-md mx-auto px-4">{error}</p>
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                   <Button 
                     onClick={() => window.location.reload()} 
-                    className="bg-red-600 hover:bg-red-700"
+                    className="bg-red-600 hover:bg-red-700 w-full sm:w-auto"
                   >
                     Try Again
                   </Button>
-                  <Button asChild variant="outline" className="border-gray-300">
-                    <Link href="/articles" className="flex items-center gap-2">
+                  <Button asChild variant="outline" className="border-gray-300 w-full sm:w-auto">
+                    <Link href="/articles" className="flex items-center justify-center gap-2">
                       <ArrowLeft className="w-4 h-4" />
                       Back to Articles
                     </Link>
@@ -118,12 +118,12 @@ export default function ArticlePageClient() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-6 sm:py-8">
         <div className="max-w-6xl mx-auto">
-          <div className="mb-6">
-            <Button asChild variant="ghost" className="text-gray-600 hover:text-blue-600">
+          <div className="mb-4 sm:mb-6">
+            <Button asChild variant="ghost" className="text-gray-600 hover:text-blue-600 text-sm sm:text-base">
               <Link href="/articles" className="flex items-center gap-2">
-                <ArrowLeft className="w-4 h-4" />
+                <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 Back to Articles
               </Link>
             </Button>

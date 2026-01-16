@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import MobileActions from "@/components/MobileActions";
 import { Button } from "@/components/ui/button";
-import { Star, Eye, Plus, ShoppingCart } from "lucide-react";
+import { Eye, Plus, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import { useLocalCart } from "@/context/LocalCartContext";
 import { useRouter } from "next/navigation";
@@ -54,15 +54,15 @@ function ProductsPage() {
   };
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen overflow-x-hidden w-full">
       <Header />
       
-      <div className="pt-24 pb-16">
+      <div className="pt-20 md:pt-24 pb-16">
         {/* Page Header */}
-        <section className="bg-gradient-to-r from-blue-50 to-sky-50 py-16">
+        <section className="bg-gradient-to-r from-blue-50 to-sky-50 py-12 md:py-16">
           <div className="container mx-auto px-4">
             <div className="text-center max-w-3xl mx-auto">
-              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 md:mb-6">
                 Our Products
               </h1>
               <p className="text-lg text-muted-foreground">
@@ -82,11 +82,15 @@ function ProductsPage() {
                 <p className="text-muted-foreground">Loading products...</p>
               </div>
             ) : products.length > 0 ? (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 md:gap-8">
                 {products.map((product) => (
-                  <div key={product._id} className="bg-white rounded-2xl border border-blue-200/30 shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                  <div 
+                    key={product._id} 
+                    className="bg-white rounded-xl md:rounded-2xl border border-blue-200/30 shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer"
+                    onClick={() => handleViewProduct(product)}
+                  >
                     {/* Product Image */}
-                    <div className="aspect-square bg-gradient-to-br from-blue-50 via-sky-50 to-cyan-50 p-8 relative group cursor-pointer" onClick={() => handleViewProduct(product)}>
+                    <div className="aspect-square bg-gradient-to-br from-blue-50 via-sky-50 to-cyan-50 p-4 md:p-8 relative group">
                       <Image
                         src={product.image}
                         alt={product.title}
@@ -111,28 +115,15 @@ function ProductsPage() {
                     </div>
 
                     {/* Product Info */}
-                    <div className="p-6 space-y-4">
-                      {/* Rating */}
-                      <div className="flex items-center gap-2">
-                        <div className="flex items-center gap-1">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star
-                              key={star}
-                              className="w-4 h-4 fill-yellow-400 text-yellow-400"
-                            />
-                          ))}
-                        </div>
-                        <span className="text-sm text-muted-foreground">(4.8)</span>
-                      </div>
-
+                    <div className="p-3 sm:p-4 md:p-6 space-y-2 sm:space-y-3 md:space-y-4">
                       {/* Title */}
-                      <h3 className="text-xl font-bold text-foreground line-clamp-2 cursor-pointer hover:text-blue-600 transition-colors" onClick={() => handleViewProduct(product)}>
+                      <h3 className="text-sm sm:text-base md:text-xl font-bold text-foreground line-clamp-2 hover:text-blue-600 transition-colors">
                         {product.title}
                       </h3>
 
                       {/* Price */}
                       <div className="flex items-center gap-3">
-                        <span className="text-2xl font-bold text-blue-600">
+                        <span className="text-lg sm:text-xl md:text-2xl font-bold text-blue-600">
                           ₹{product.price.toLocaleString()}
                         </span>
                       </div>
@@ -160,38 +151,19 @@ function ProductsPage() {
                       </div>
 
                       {/* Action Buttons */}
-                      <div className="flex flex-col gap-3 pt-4 border-t border-gray-100">
+                      <div className="pt-4 border-t border-gray-100">
                         <Button
                           size="sm"
-                          onClick={() => handleViewProduct(product)}
-                          variant="outline"
-                          className="w-full border-2 border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 gap-2"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddToCart(product);
+                          }}
+                          disabled={cartLoading || product.stock === 0}
+                          className="w-full bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700 gap-2 disabled:opacity-50"
                         >
-                          <Eye className="w-4 h-4" />
-                          View Details
+                          <ShoppingCart className="w-4 h-4" />
+                          {cartLoading ? 'Adding...' : product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
                         </Button>
-                        
-                        <div className="flex gap-2">
-                          <Button
-                            size="sm"
-                            onClick={() => handleAddToCart(product)}
-                            disabled={cartLoading || product.stock === 0}
-                            variant="outline"
-                            className="flex-1 border-2 border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 gap-2 disabled:opacity-50"
-                          >
-                            <Plus className="w-4 h-4" />
-                            {cartLoading ? 'Adding...' : product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
-                          </Button>
-                          
-                          <Button
-                            size="sm"
-                            onClick={scrollToContact}
-                            className="flex-1 bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700 gap-2"
-                          >
-                            <ShoppingCart className="w-4 h-4" />
-                            Buy Now
-                          </Button>
-                        </div>
                       </div>
                     </div>
                   </div>

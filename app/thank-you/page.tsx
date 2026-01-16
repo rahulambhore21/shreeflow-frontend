@@ -19,17 +19,17 @@ function ThankYouContent() {
   });
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-background to-blue-50">
+    <main className="min-h-screen bg-gradient-to-b from-background to-blue-50 overflow-x-hidden w-full">
       <Header />
       
-      <div className="pt-24 pb-16">
+      <div className="pt-20 md:pt-24 pb-12 md:pb-16">
         <div className="container mx-auto px-4 max-w-4xl">
           {/* Success Header */}
-          <div className="text-center mb-12">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <CheckCircle className="w-12 h-12 text-green-600" />
+          <div className="text-center mb-8 md:mb-12">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6">
+              <CheckCircle className="w-10 h-10 sm:w-12 sm:h-12 text-green-600" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-3 md:mb-4">
               Thank You for Your Order!
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">

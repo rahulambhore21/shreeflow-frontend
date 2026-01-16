@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Shield, Zap, Droplets, Clock, Star, ShoppingCart, Waves, Eye, Plus } from "lucide-react";
+import { ArrowRight, Shield, Zap, Droplets, Clock, Waves, Plus } from "lucide-react";
 import Image from "next/image";
 import { useLocalCart } from "@/context/LocalCartContext";
 import { useRouter } from "next/navigation";
@@ -151,30 +151,12 @@ const Products = () => {
                       fill
                       className="object-contain transition-transform duration-300 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
-                      <div className="bg-white/90 backdrop-blur-sm rounded-full p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <Eye className="w-6 h-6 text-blue-600" />
-                      </div>
-                    </div>
                   </div>
 
                   {/* Product Info */}
                   <div className="p-6 space-y-4">
-                    {/* Rating */}
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className="w-4 h-4 fill-yellow-400 text-yellow-400"
-                          />
-                        ))}
-                      </div>
-                      <span className="text-sm text-muted-foreground">(100+)</span>
-                    </div>
-
                     {/* Title */}
-                    <h3 className="text-xl font-bold text-foreground line-clamp-2 cursor-pointer hover:text-blue-600 transition-colors" onClick={() => handleViewProduct(product)}>
+                    <h3 className="text-xl font-bold text-foreground line-clamp-2">
                       {product.title}
                     </h3>
 
@@ -199,40 +181,17 @@ const Products = () => {
                       ))}
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex flex-col gap-3 pt-4 border-t border-gray-100">
+                    {/* Action Button */}
+                    <div className="pt-4 border-t border-gray-100">
                       <Button
                         size="sm"
-                        onClick={() => handleViewProduct(product)}
-                        variant="outline"
-                        className="w-full border-2 border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 gap-2"
+                        onClick={() => handleAddToCart(product)}
+                        disabled={cartLoading}
+                        className="w-full bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700 gap-2"
                       >
-                        <Eye className="w-4 h-4" />
-                        View Details
+                        <Plus className="w-4 h-4" />
+                        {cartLoading ? 'Adding...' : 'Add to Cart'}
                       </Button>
-                      
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          onClick={() => handleAddToCart(product)}
-                          disabled={cartLoading}
-                          variant="outline"
-                          className="flex-1 border-2 border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 gap-2"
-                        >
-                          <Plus className="w-4 h-4" />
-                          {cartLoading ? 'Adding...' : 'Add to Cart'}
-                        </Button>
-                        
-                        <Button
-                          size="sm"
-                          onClick={() => handleAddToCart(product)}
-                          disabled={cartLoading}
-                          className="flex-1 bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700 gap-2"
-                        >
-                          <ShoppingCart className="w-4 h-4" />
-                          {cartLoading ? 'Adding...' : 'Buy Now'}
-                        </Button>
-                      </div>
                     </div>
                   </div>
                 </div>

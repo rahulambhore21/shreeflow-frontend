@@ -80,36 +80,32 @@ export default function ArticlesList() {
 
   if (loading) {
     return (
-      <div className="space-y-8">
+      <div className="space-y-6 md:space-y-8">
         {/* Loading search section */}
-        <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100">
+        <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-8 shadow-xl border border-gray-100">
           <div className="animate-pulse space-y-4">
-            <div className="flex space-x-2">
-              <div className="h-8 bg-gray-200 rounded-full w-20"></div>
-              <div className="h-8 bg-gray-200 rounded-full w-24"></div>
-              <div className="h-8 bg-gray-200 rounded-full w-16"></div>
+            <div className="flex flex-wrap gap-2">
+              <div className="h-7 md:h-8 bg-gray-200 rounded-full w-16 md:w-20"></div>
+              <div className="h-7 md:h-8 bg-gray-200 rounded-full w-20 md:w-24"></div>
+              <div className="h-7 md:h-8 bg-gray-200 rounded-full w-14 md:w-16"></div>
             </div>
           </div>
         </div>
         
         {/* Loading articles grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
           {[...Array(6)].map((_, i) => (
             <Card key={i} className="overflow-hidden animate-pulse shadow-lg">
-              <div className="h-56 bg-gray-200"></div>
-              <CardContent className="p-6 space-y-4">
+              <div className="h-48 md:h-56 bg-gray-200"></div>
+              <CardContent className="p-4 md:p-6 space-y-3 md:space-y-4">
                 <div className="flex space-x-2">
-                  <div className="h-3 bg-gray-200 rounded w-20"></div>
-                  <div className="h-3 bg-gray-200 rounded w-16"></div>
+                  <div className="h-3 bg-gray-200 rounded w-16 md:w-20"></div>
+                  <div className="h-3 bg-gray-200 rounded w-12 md:w-16"></div>
                 </div>
-                <div className="h-6 bg-gray-200 rounded"></div>
-                <div className="h-6 bg-gray-200 rounded w-4/5"></div>
-                <div className="h-4 bg-gray-200 rounded w-full"></div>
-                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                <div className="flex justify-between items-center pt-2">
-                  <div className="h-4 bg-gray-200 rounded w-20"></div>
-                  <div className="h-4 bg-gray-200 rounded w-16"></div>
-                </div>
+                <div className="h-5 md:h-6 bg-gray-200 rounded"></div>
+                <div className="h-5 md:h-6 bg-gray-200 rounded w-4/5"></div>
+                <div className="h-3 md:h-4 bg-gray-200 rounded w-full"></div>
+                <div className="h-3 md:h-4 bg-gray-200 rounded w-3/4"></div>
               </CardContent>
             </Card>
           ))}
@@ -119,20 +115,20 @@ export default function ArticlesList() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8">
       {/* Filters */}
-      <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Discover Articles</h2>
-          <p className="text-gray-600">Explore our collection of insights, tutorials, and stories</p>
+      <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-8 shadow-xl border border-gray-100">
+        <div className="mb-4 md:mb-6">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2 break-words">Discover Articles</h2>
+          <p className="text-sm md:text-base text-gray-600 break-words">Explore our collection of insights, tutorials, and stories</p>
         </div>
 
-        <div className="space-y-4">
-          <div className="flex flex-wrap gap-3 items-center">
-            <span className="text-sm font-semibold text-gray-700 bg-gray-100 px-3 py-1 rounded-full">Categories:</span>
+        <div className="space-y-3 md:space-y-4 overflow-x-hidden">
+          <div className="flex flex-wrap gap-2 md:gap-3 items-center">
+            <span className="text-xs md:text-sm font-semibold text-gray-700 bg-gray-100 px-2 md:px-3 py-1 rounded-full whitespace-nowrap">Categories:</span>
             <Badge
               variant={selectedCategory === '' ? 'default' : 'secondary'}
-              className={`cursor-pointer px-4 py-2 rounded-full transition-all duration-200 ${
+              className={`cursor-pointer px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm rounded-full transition-all duration-200 whitespace-nowrap ${
                 selectedCategory === '' 
                   ? 'bg-blue-600 text-white shadow-lg' 
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -145,12 +141,13 @@ export default function ArticlesList() {
               <Badge
                 key={category}
                 variant={selectedCategory === category ? 'default' : 'secondary'}
-                className={`cursor-pointer px-4 py-2 rounded-full transition-all duration-200 ${
+                className={`cursor-pointer px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm rounded-full transition-all duration-200 max-w-[200px] truncate ${
                   selectedCategory === category 
                     ? 'bg-blue-600 text-white shadow-lg' 
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
                 onClick={() => setSelectedCategory(category)}
+                title={category}
               >
                 {category}
               </Badge>
@@ -158,11 +155,11 @@ export default function ArticlesList() {
           </div>
 
           {tags.length > 0 && (
-            <div className="flex flex-wrap gap-3 items-center">
-              <span className="text-sm font-semibold text-gray-700 bg-gray-100 px-3 py-1 rounded-full">Tags:</span>
+            <div className="flex flex-wrap gap-2 md:gap-3 items-center">
+              <span className="text-xs md:text-sm font-semibold text-gray-700 bg-gray-100 px-2 md:px-3 py-1 rounded-full whitespace-nowrap">Tags:</span>
               <Badge
                 variant={selectedTag === '' ? 'default' : 'secondary'}
-                className={`cursor-pointer px-4 py-2 rounded-full transition-all duration-200 ${
+                className={`cursor-pointer px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm rounded-full transition-all duration-200 whitespace-nowrap ${
                   selectedTag === '' 
                     ? 'bg-green-600 text-white shadow-lg' 
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -175,12 +172,13 @@ export default function ArticlesList() {
                 <Badge
                   key={tag}
                   variant={selectedTag === tag ? 'default' : 'secondary'}
-                  className={`cursor-pointer px-4 py-2 rounded-full transition-all duration-200 ${
+                  className={`cursor-pointer px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm rounded-full transition-all duration-200 max-w-[150px] truncate ${
                     selectedTag === tag 
                       ? 'bg-green-600 text-white shadow-lg' 
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                   onClick={() => setSelectedTag(tag)}
+                  title={`#${tag}`}
                 >
                   #{tag}
                 </Badge>
@@ -190,7 +188,7 @@ export default function ArticlesList() {
 
           {(selectedCategory || selectedTag) && (
             <div className="flex justify-center pt-2">
-              <Button variant="outline" size="sm" onClick={clearFilters} className="rounded-full px-6">
+              <Button variant="outline" size="sm" onClick={clearFilters} className="rounded-full px-4 md:px-6 text-xs md:text-sm">
                 Clear All Filters
               </Button>
             </div>
@@ -200,16 +198,16 @@ export default function ArticlesList() {
 
       {/* Articles Grid */}
       {articles.length === 0 ? (
-        <div className="text-center py-20">
+        <div className="text-center py-12 md:py-20 px-4">
           <div className="max-w-md mx-auto">
-            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <BookOpen className="h-12 w-12 text-gray-400" />
+            <div className="w-20 h-20 md:w-24 md:h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6">
+              <BookOpen className="h-10 w-10 md:h-12 md:w-12 text-gray-400" />
             </div>
-            <h3 className="text-2xl font-semibold text-gray-900 mb-3">No articles found</h3>
-            <p className="text-gray-600 mb-6">
+            <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-2 md:mb-3">No articles found</h3>
+            <p className="text-sm md:text-base text-gray-600 mb-4 md:mb-6">
               We couldn't find any articles matching your criteria. Try adjusting your filters.
             </p>
-            <Button variant="outline" onClick={clearFilters} className="rounded-full px-6">
+            <Button variant="outline" onClick={clearFilters} className="rounded-full px-4 md:px-6 text-sm md:text-base">
               Clear All Filters
             </Button>
           </div>
@@ -217,8 +215,8 @@ export default function ArticlesList() {
       ) : (
         <>
           {/* Results count */}
-          <div className="text-center mb-8">
-            <p className="text-gray-600">
+          <div className="text-center mb-6 md:mb-8 px-4">
+            <p className="text-sm md:text-base text-gray-600">
               Found <span className="font-semibold text-blue-600">{articles.length}</span> article{articles.length !== 1 ? 's' : ''}
               {(selectedCategory || selectedTag) && (
                 <span> matching your criteria</span>
@@ -227,7 +225,7 @@ export default function ArticlesList() {
           </div>
           
           {/* Articles Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
             {articles.map((article) => (
               <ArticleCard key={article._id} article={article} />
             ))}
@@ -237,26 +235,26 @@ export default function ArticlesList() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100">
-          <div className="flex justify-center items-center space-x-6">
+        <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 shadow-xl border border-gray-100">
+          <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
             <Button
               variant="outline"
               onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
               disabled={currentPage === 1}
-              className="rounded-full px-6 py-3 border-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="rounded-full px-4 md:px-6 py-2 md:py-3 border-2 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto text-sm md:text-base"
             >
               <ChevronLeft className="h-4 w-4 mr-2" />
               Previous
             </Button>
 
             <div className="flex items-center space-x-2">
-              <span className="text-gray-600 font-medium">
+              <span className="text-sm md:text-base text-gray-600 font-medium">
                 Page
               </span>
-              <span className="bg-blue-600 text-white px-4 py-2 rounded-full font-bold">
+              <span className="bg-blue-600 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-full font-bold text-sm md:text-base">
                 {currentPage}
               </span>
-              <span className="text-gray-600 font-medium">
+              <span className="text-sm md:text-base text-gray-600 font-medium">
                 of {totalPages}
               </span>
             </div>
@@ -265,7 +263,7 @@ export default function ArticlesList() {
               variant="outline"
               onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
               disabled={currentPage === totalPages}
-              className="rounded-full px-6 py-3 border-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="rounded-full px-4 md:px-6 py-2 md:py-3 border-2 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto text-sm md:text-base"
             >
               Next
               <ChevronRight className="h-4 w-4 ml-2" />

@@ -20,24 +20,26 @@ const MobileActions = () => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 md:hidden bg-card/95 backdrop-blur-md border-t border-primary/10 shadow-lg shadow-primary/10 z-50 safe-area-inset-bottom">
+    <div className="fixed bottom-0 left-0 right-0 md:hidden bg-gradient-to-r from-blue-600 to-sky-600 shadow-lg shadow-blue-500/50 z-50 safe-area-inset-bottom">
       <div className="grid grid-cols-2">
         <button
           onClick={handleCartClick}
-          className="flex items-center justify-center gap-2 py-4 px-4 text-foreground hover:bg-primary/5 transition-colors active:bg-primary/10 relative"
+          className="flex items-center justify-center gap-2 py-4 px-4 text-white hover:bg-white/10 transition-colors active:bg-white/20 relative"
         >
-          <ShoppingCart className="w-5 h-5 text-primary" />
-          {cart.itemCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
-              {cart.itemCount}
-            </span>
-          )}
+          <div className="relative">
+            <ShoppingCart className="w-5 h-5" />
+            {cart.itemCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center border-2 border-white shadow-md">
+                {cart.itemCount}
+              </span>
+            )}
+          </div>
           <span className="font-semibold text-sm">Cart</span>
         </button>
         
         <button
           onClick={scrollToContact}
-          className="flex items-center justify-center gap-2 py-4 px-4 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors active:bg-primary/80"
+          className="flex items-center justify-center gap-2 py-4 px-4 text-white hover:bg-white/10 transition-colors active:bg-white/20 border-l border-white/20"
         >
           <Phone className="w-5 h-5" />
           <span className="font-semibold text-sm">Call Now</span>

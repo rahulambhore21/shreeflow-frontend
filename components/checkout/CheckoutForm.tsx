@@ -278,9 +278,9 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onClose }) => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-2xl mx-auto space-y-6 ">
       {/* Order Summary */}
-      <Card>
+      <Card className='bg-blue-600 text-white'>
         <CardHeader>
           <CardTitle>Order Summary</CardTitle>
         </CardHeader>
@@ -416,7 +416,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onClose }) => {
         </Card>
 
         {/* Submit Button */}
-        <div className="flex gap-4">
+        <div className="flex gap-4 ">
           {onClose && (
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
@@ -425,7 +425,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onClose }) => {
           <Button 
             type="submit" 
             disabled={isLoading || cart.items.length === 0}
-            className="flex-1"
+            className="flex-1 bg-blue-600 text-white"
           >
             {isLoading ? 'Processing...' : `Pay ₹${cart.totalAmount.toLocaleString()}`}
           </Button>
