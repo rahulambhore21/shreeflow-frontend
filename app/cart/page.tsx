@@ -41,7 +41,7 @@ export default function CartPage() {
               <Button 
                 variant="outline" 
                 onClick={() => setShowCheckout(false)}
-                className="mb-4"
+                className="mb-4 transition-all duration-300 hover:scale-105 active:scale-95"
               >
                 ← Back to Cart
               </Button>
@@ -70,7 +70,7 @@ export default function CartPage() {
             </div>
             <div className="space-y-4">
               <Link href="/products">
-                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700">
+                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700 transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95">
                   Browse Products
                 </Button>
               </Link>
@@ -127,6 +127,7 @@ export default function CartPage() {
                               size="sm"
                               onClick={() => updateQuantity(item.productId, item.quantity - 1)}
                               disabled={item.quantity <= 1}
+                              className="transition-all duration-300 hover:scale-110 active:scale-95"
                             >
                               <Minus className="w-4 h-4" />
                             </Button>
@@ -138,6 +139,7 @@ export default function CartPage() {
                               size="sm"
                               onClick={() => updateQuantity(item.productId, item.quantity + 1)}
                               disabled={item.quantity >= (item.stock || 0)}
+                              className="transition-all duration-300 hover:scale-110 active:scale-95"
                             >
                               <Plus className="w-4 h-4" />
                             </Button>
@@ -147,7 +149,7 @@ export default function CartPage() {
                             variant="ghost"
                             size="sm"
                             onClick={() => removeFromCart(item.productId)}
-                            className="text-destructive hover:text-destructive"
+                            className="text-destructive hover:text-destructive transition-all duration-300 hover:scale-110 active:scale-95"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
@@ -196,7 +198,7 @@ export default function CartPage() {
                   </div>
 
                   <Button 
-                    className="w-full bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700"
+                    className="w-full bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700 transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95"
                     size="lg"
                     onClick={() => setShowCheckout(true)}
                   >

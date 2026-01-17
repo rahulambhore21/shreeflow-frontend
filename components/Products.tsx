@@ -194,7 +194,7 @@ const Products = () => {
                           handleAddToCart(product);
                         }}
                         disabled={cartLoading}
-                        className="w-full bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700 gap-2"
+                        className="w-full bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700 transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95 gap-2"
                       >
                         <Plus className="w-4 h-4" />
                         {cartLoading ? 'Adding...' : 'Add to Cart'}
@@ -311,7 +311,7 @@ const Products = () => {
                 <Button
                   size="lg"
                   onClick={scrollToContact}
-                  className="bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700 gap-2 flex-1 py-3 shadow-lg shadow-blue-500/25 relative overflow-hidden group"
+                  className="bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700 gap-2 flex-1 py-3 shadow-lg shadow-blue-500/25 relative overflow-hidden group transition-all duration-300 hover:scale-105 active:scale-95"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                   Buy Now - ₹2,999
@@ -321,7 +321,7 @@ const Products = () => {
                   size="lg"
                   variant="outline"
                   onClick={scrollToContact}
-                  className="border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 gap-2 flex-1 py-3"
+                  className="border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 gap-2 flex-1 py-3 transition-all duration-300 hover:scale-105 active:scale-95"
                 >
                   <ShoppingCart className="w-4 h-4" />
                   Add to Cart
@@ -338,7 +338,7 @@ const Products = () => {
               size="lg"
               onClick={() => router.push('/products')}
               variant="outline"
-              className="border-2 border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 gap-2"
+              className="border-2 border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 gap-2 transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95"
             >
               View All Products
               <ArrowRight className="w-4 h-4" />

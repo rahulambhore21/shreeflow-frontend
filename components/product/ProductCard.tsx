@@ -140,7 +140,7 @@ const ProductCard = ({
             <Button
               size="lg"
               variant="outline"
-              className="w-full border-2 border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 gap-2"
+              className="w-full border-2 border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 gap-2 transition-all duration-300 hover:scale-105 active:scale-95"
             >
               <Eye className="w-4 h-4" />
               View Details
@@ -154,7 +154,7 @@ const ProductCard = ({
               onClick={handleAddToCart}
               disabled={isLoading}
               variant="outline"
-              className="flex-1 border-2 border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 gap-2"
+              className="flex-1 border-2 border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 gap-2 transition-all duration-300 hover:scale-105 active:scale-95"
             >
               <Plus className="w-4 h-4" />
               {isLoading ? 'Adding...' : 'Add to Cart'}
@@ -164,7 +164,7 @@ const ProductCard = ({
               size="lg"
               onClick={handleAddToCart}
               disabled={isLoading}
-              className="flex-1 bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700 gap-2"
+              className="flex-1 bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700 gap-2 transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95"
             >
               <ShoppingCart className="w-4 h-4" />
               {isLoading ? 'Adding...' : 'Buy Now'}

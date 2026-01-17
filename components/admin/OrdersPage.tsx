@@ -452,6 +452,7 @@ export default function OrdersPage() {
                             size="sm" 
                             onClick={() => router.push(`/admin/orders/${order._id}`)}
                             title="View Order Details"
+                            className="text-blue-600 hover:text-blue-800 hover:underline transition-all duration-200 cursor-pointer"
                           >
                             <Eye className="w-4 h-4" />
                           </Button>
@@ -461,6 +462,7 @@ export default function OrdersPage() {
                               size="sm"
                               onClick={() => handleStatusUpdate(order._id, 'paid')}
                               title="Mark as Paid"
+                              className="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300 hover:shadow-md transition-all duration-200 cursor-pointer"
                             >
                               <Package className="w-4 h-4" />
                             </Button>
@@ -471,7 +473,7 @@ export default function OrdersPage() {
                               size="sm"
                               onClick={() => handleCreateShipment(order._id)}
                               title="Create Shiprocket Shipment"
-                              className="text-blue-600 hover:text-blue-700"
+                              className="text-blue-600 hover:text-blue-700 bg-gray-200 px-4 py-2 rounded hover:bg-gray-300 hover:shadow-md transition-all duration-200 cursor-pointer"
                             >
                               <Truck className="w-4 h-4" />
                             </Button>
@@ -482,6 +484,7 @@ export default function OrdersPage() {
                               size="sm"
                               onClick={() => handleStatusUpdate(order._id, 'shipped')}
                               title="Mark as Shipped"
+                              className="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300 hover:shadow-md transition-all duration-200 cursor-pointer"
                             >
                               <CheckCircle className="w-4 h-4" />
                             </Button>
@@ -492,7 +495,7 @@ export default function OrdersPage() {
                               size="sm"
                               onClick={() => handleTrackShipment(order._id)}
                               title="Track Shipment"
-                              className="text-green-600 hover:text-green-700"
+                              className="text-green-600 hover:text-green-700 bg-gray-200 px-4 py-2 rounded hover:bg-gray-300 hover:shadow-md transition-all duration-200 cursor-pointer"
                             >
                               <Search className="w-4 h-4" />
                             </Button>

@@ -92,7 +92,7 @@ const Header = () => {
               variant="ghost"
               size="sm"
               onClick={handleCartClick}
-              className="relative gap-2"
+              className="relative gap-2 hover:bg-blue-50 hover:text-blue-600 transition-all duration-300 hover:scale-105 active:scale-95"
             >
               <ShoppingCart className="w-4 h-4" />
               Cart
@@ -105,7 +105,7 @@ const Header = () => {
 
             <Button
               onClick={() => scrollToSection("contact")}
-              className="bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700"
+              className="bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700 transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95"
             >
               <Phone className="w-4 h-4 mr-2" />
               Contact Us
@@ -116,7 +116,7 @@ const Header = () => {
           <Button
             variant="ghost"
             size="sm"
-            className="md:hidden"
+            className="md:hidden hover:bg-blue-50 hover:text-blue-600 transition-all duration-300 hover:scale-110 active:scale-95"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -143,7 +143,7 @@ const Header = () => {
                   variant="ghost"
                   size="sm"
                   onClick={handleCartClick}
-                  className="w-full justify-start gap-2"
+                  className="w-full justify-start gap-2 hover:bg-blue-50 hover:text-blue-600 transition-all duration-300 active:scale-95"
                 >
                   <ShoppingCart className="w-4 h-4" />
                   Cart
@@ -159,7 +159,7 @@ const Header = () => {
                     scrollToSection("contact");
                     setIsMenuOpen(false);
                   }}
-                  className="w-full justify-start gap-2 bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700"
+                  className="w-full justify-start gap-2 bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700 transition-all duration-300 hover:shadow-lg active:scale-95"
                 >
                   <Phone className="w-4 h-4" />
                   Contact Us

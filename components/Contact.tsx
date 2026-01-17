@@ -183,7 +183,7 @@ const Contact = () => {
               <Button
                 type="submit"
                 size="lg"
-                className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-700 hover:to-cyan-700 gap-3 h-14 text-lg font-semibold shadow-lg shadow-blue-500/25"
+                className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-700 hover:to-cyan-700 gap-3 h-14 text-lg font-semibold shadow-lg shadow-blue-500/25 transition-all duration-300 hover:scale-105 active:scale-95"
               >
                 Send Message
                 <Send className="w-5 h-5" />

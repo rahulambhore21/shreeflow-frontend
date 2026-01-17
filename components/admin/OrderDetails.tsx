@@ -194,7 +194,7 @@ export default function OrderDetailsComponent({ orderId }: OrderDetailsProps) {
           <Button
             variant="ghost"
             onClick={() => router.back()}
-            className="gap-2"
+            className="gap-2 hover:bg-gray-200 hover:shadow-sm transition-all duration-200 cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             Back
@@ -327,7 +327,7 @@ export default function OrderDetailsComponent({ orderId }: OrderDetailsProps) {
                 <Button 
                   onClick={() => updateOrderStatus('paid')} 
                   disabled={isUpdating}
-                  className="w-full bg-blue-600 hover:bg-blue-700"
+                  className="w-full bg-blue-600 hover:bg-blue-700 hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer"
                 >
                   {isUpdating ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <CreditCard className="w-4 h-4 mr-2" />}
                   Mark as Paid
@@ -337,7 +337,7 @@ export default function OrderDetailsComponent({ orderId }: OrderDetailsProps) {
                 <Button 
                   onClick={() => updateOrderStatus('shipped')} 
                   disabled={isUpdating}
-                  className="w-full bg-purple-600 hover:bg-purple-700"
+                  className="w-full bg-purple-600 hover:bg-purple-700 hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer"
                 >
                   {isUpdating ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Truck className="w-4 h-4 mr-2" />}
                   Mark as Shipped
@@ -347,7 +347,7 @@ export default function OrderDetailsComponent({ orderId }: OrderDetailsProps) {
                 <Button 
                   onClick={() => updateOrderStatus('delivered')} 
                   disabled={isUpdating}
-                  className="w-full bg-green-600 hover:bg-green-700"
+                  className="w-full bg-green-600 hover:bg-green-700 hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer"
                 >
                   {isUpdating ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <CheckCircle className="w-4 h-4 mr-2" />}
                   Mark as Delivered
@@ -358,7 +358,7 @@ export default function OrderDetailsComponent({ orderId }: OrderDetailsProps) {
                   onClick={() => updateOrderStatus('cancelled')} 
                   disabled={isUpdating}
                   variant="destructive"
-                  className="w-full"
+                  className="w-full hover:bg-red-700 hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer"
                 >
                   {isUpdating ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
                   Cancel Order
