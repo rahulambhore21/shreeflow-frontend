@@ -25,6 +25,7 @@ export interface OrderWithProducts {
     country: string;
   };
   status: 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
+  paymentMethod: 'online' | 'cod';
   razorpay_order_id?: string;
   razorpay_payment_id?: string;
   razorpay_signature?: string;
