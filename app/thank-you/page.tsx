@@ -1,24 +1,46 @@
 "use client";
 
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useEffect, useState, Suspense, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, Package, Truck, Phone, Mail, ArrowRight, Home, ShoppingBag } from "lucide-react";
+import { CheckCircle, Package, Truck, Phone, Mail, ArrowRight, Home, ShoppingBag, Download } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from 'next/navigation';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useToast } from '@/hooks/use-toast';
 
 function ThankYouContent() {
   const searchParams = useSearchParams();
+  const { toast } = useToast();
+  const orderDetailsRef = useRef<HTMLDivElement>(null);
+  const [autoDownloadTriggered, setAutoDownloadTriggered] = useState(false);
+  
   const [orderDetails, setOrderDetails] = useState({
-    orderId: searchParams.get('orderId') || 'SF' + Date.now(),
+    orderId: searchParams.get('orderId') || `SF-${Date.now()}`,
     amount: searchParams.get('amount') || '2999',
     shippingCharge: searchParams.get('shippingCharge') || '0',
     customerName: searchParams.get('name') || 'Customer',
     customerEmail: searchParams.get('email') || '',
     paymentMethod: searchParams.get('paymentMethod') || 'online',
   });
+
+  // Auto-trigger PDF download after page loads
+  useEffect(() => {
+    if (!autoDownloadTriggered) {
+      const timer = setTimeout(() => {
+        window.print();
+        setAutoDownloadTriggered(true);
+      }, 1500); // Wait 1.5 seconds for content to render
+
+      return () => clearTimeout(timer);
+    }
+  }, [autoDownloadTriggered]);
+
+  const handleDownloadPDF = () => {
+    // Directly open browser's print dialog for PDF download
+    window.print();
+  };
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-background to-blue-50 overflow-x-hidden w-full">
@@ -42,8 +64,9 @@ function ThankYouContent() {
           </div>
 
           {/* Order Details Card */}
-          <Card className="mb-8 border-green-200 bg-green-50/30">
-            <CardContent className="p-8">
+          <div ref={orderDetailsRef}>
+            <Card className="mb-8 border-green-200 bg-green-50/30">
+              <CardContent className="p-8">
               <div className="grid md:grid-cols-2 gap-8">
                 <div>
                   <h2 className="text-2xl font-bold text-foreground mb-4">Order Details</h2>
@@ -114,6 +137,31 @@ function ThankYouContent() {
                   </div>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+          </div>
+
+          {/* Save Order Details Section */}
+          <Card className="mb-8 border-blue-200 bg-blue-50/30 print:hidden">
+            <CardContent className="p-6">
+              <h3 className="text-lg font-bold text-foreground mb-3 flex items-center gap-2">
+                <Download className="w-5 h-5 text-blue-600" />
+                Save Your Order Details
+              </h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Download a PDF copy of your order information for your records
+              </p>
+              <Button
+                onClick={handleDownloadPDF}
+                className="w-full bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700 transition-all"
+                size="lg"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Download PDF
+              </Button>
+              <p className="text-xs text-muted-foreground mt-3 text-center">
+                💡 Tip: Select "Save as PDF" as the destination in your browser's print dialog
+              </p>
             </CardContent>
           </Card>
 

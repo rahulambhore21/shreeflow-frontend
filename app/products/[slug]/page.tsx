@@ -64,8 +64,7 @@ export default function ProductPage({ params }: ProductPageProps) {
       productId: product._id,
       title: product.title,
       price: product.price,
-      image: product.image,
-      stock: product.stock
+      image: product.image
     });
   };
 
@@ -122,16 +121,6 @@ export default function ProductPage({ params }: ProductPageProps) {
 
             {/* Product Info */}
             <div className="space-y-6 md:space-y-8 w-full max-w-full overflow-hidden">
-              {/* Stock Status */}
-              <div className="flex items-center gap-3 md:gap-4 flex-wrap">
-                {product.stock > 0 && (
-                  <span className="flex items-center gap-1 text-green-600 text-xs sm:text-sm font-medium">
-                    <CheckCircle className="w-4 h-4" />
-                    In Stock ({product.stock} available)
-                  </span>
-                )}
-              </div>
-
               {/* Title and Price */}
               <div className="overflow-hidden">
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-3 md:mb-4 break-words">
@@ -165,9 +154,8 @@ export default function ProductPage({ params }: ProductPageProps) {
                 <Button
                   size="lg"
                   onClick={handleAddToCart}
-                  disabled={cartLoading || product.stock === 0}
-                  className="bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700 gap-2 md:gap-3 flex-1 py-3 md:py-4 text-sm sm:text-base md:text-lg font-semibold shadow-lg shadow-blue-500/25 disabled:opacity-50 w-full sm:w-auto"
-                >
+                  disabled={cartLoading}
+                  className="bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700 gap-2 md:gap-3 flex-1 py-3 md:py-4 text-sm sm:text-base md:text-lg font-semibold shadow-lg shadow-blue-500/25 disabled:opacity-50 w-full sm:w-auto">
                   <span className="truncate">{cartLoading ? 'Adding...' : 'Add to Cart'}</span>
                   <ShoppingCart className="w-4 h-4 md:w-5 md:h-5" />
                 </Button>
@@ -244,10 +232,6 @@ export default function ProductPage({ params }: ProductPageProps) {
                     <span className="text-muted-foreground text-right break-words">{product.color}</span>
                   </div>
                 )}
-                <div className="flex justify-between items-center py-3 border-b border-blue-200/30 gap-4">
-                  <span className="font-medium text-foreground shrink-0">Stock:</span>
-                  <span className="text-muted-foreground text-right break-words">{product.stock} units available</span>
-                </div>
                 <div className="flex justify-between items-center py-3 border-b border-blue-200/30 gap-4">
                   <span className="font-medium text-foreground shrink-0">Price:</span>
                   <span className="text-muted-foreground text-right break-words">₹{product.price.toLocaleString()}</span>

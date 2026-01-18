@@ -27,13 +27,16 @@ interface ProductFormData {
   title: string;
   description: string;
   price: number;
-  stock: number;
   image: string;
   categories: string[];
   sku?: string;
   size?: string;
   color?: string;
   active: boolean;
+  weight?: number;
+  length?: number;
+  breadth?: number;
+  height?: number;
 }
 
 export default function ProductForm({ mode, productId }: ProductFormProps) {
@@ -47,13 +50,16 @@ export default function ProductForm({ mode, productId }: ProductFormProps) {
     title: '',
     description: '',
     price: 0,
-    stock: 0,
     image: '',
     categories: [],
     sku: '',
     size: '',
     color: '',
-    active: true
+    active: true,
+    weight: 0.5,
+    length: 10,
+    breadth: 10,
+    height: 5
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof ProductFormData, string>>>({});
@@ -73,13 +79,16 @@ export default function ProductForm({ mode, productId }: ProductFormProps) {
         title: product.title,
         description: product.description,
         price: product.price,
-        stock: product.stock,
         image: product.image,
         categories: product.categories || [],
         sku: product.sku || '',
         size: product.size || '',
         color: product.color || '',
-        active: product.active !== undefined ? product.active : true
+        active: product.active !== undefined ? product.active : true,
+        weight: product.weight || 0.5,
+        length: product.length || 10,
+        breadth: product.breadth || 10,
+        height: product.height || 5
       });
     } catch (error) {
       console.error('Error loading product:', error);
@@ -111,10 +120,6 @@ export default function ProductForm({ mode, productId }: ProductFormProps) {
 
     if (formData.price <= 0) {
       newErrors.price = 'Price must be greater than 0';
-    }
-
-    if (formData.stock < 0) {
-      newErrors.stock = 'Stock cannot be negative';
     }
 
     if (!formData.image.trim()) {
@@ -292,24 +297,6 @@ export default function ProductForm({ mode, productId }: ProductFormProps) {
                       <p className="text-sm text-red-600 mt-1">{errors.price}</p>
                     )}
                   </div>
-
-                  <div>
-                    <Label htmlFor="stock">
-                      Stock Quantity <span className="text-red-500">*</span>
-                    </Label>
-                    <Input
-                      id="stock"
-                      type="number"
-                      min="0"
-                      value={formData.stock}
-                      onChange={(e) => setFormData({ ...formData, stock: parseInt(e.target.value) || 0 })}
-                      placeholder="0"
-                      className="mt-1"
-                    />
-                    {errors.stock && (
-                      <p className="text-sm text-red-600 mt-1">{errors.stock}</p>
-                    )}
-                  </div>
                 </div>
 
                 <div>
@@ -322,6 +309,84 @@ export default function ProductForm({ mode, productId }: ProductFormProps) {
                     className="mt-1"
                   />
                 </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Shipping Dimensions</CardTitle>
+                <p className="text-sm text-gray-600 mt-1">
+                  These dimensions are used by Shiprocket to calculate accurate shipping charges
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="weight">
+                    Weight (kg) <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    id="weight"
+                    type="number"
+                    step="0.01"
+                    min="0.01"
+                    max="50"
+                    value={formData.weight}
+                    onChange={(e) => setFormData({ ...formData, weight: parseFloat(e.target.value) || 0.5 })}
+                    placeholder="0.5"
+                    className="mt-1"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Weight in kilograms (0.01 - 50 kg)
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <Label htmlFor="length">Length (cm)</Label>
+                    <Input
+                      id="length"
+                      type="number"
+                      min="1"
+                      max="200"
+                      value={formData.length}
+                      onChange={(e) => setFormData({ ...formData, length: parseInt(e.target.value) || 10 })}
+                      placeholder="10"
+                      className="mt-1"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="breadth">Breadth (cm)</Label>
+                    <Input
+                      id="breadth"
+                      type="number"
+                      min="1"
+                      max="200"
+                      value={formData.breadth}
+                      onChange={(e) => setFormData({ ...formData, breadth: parseInt(e.target.value) || 10 })}
+                      placeholder="10"
+                      className="mt-1"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="height">Height (cm)</Label>
+                    <Input
+                      id="height"
+                      type="number"
+                      min="1"
+                      max="200"
+                      value={formData.height}
+                      onChange={(e) => setFormData({ ...formData, height: parseInt(e.target.value) || 5 })}
+                      placeholder="5"
+                      className="mt-1"
+                    />
+                  </div>
+                </div>
+
+                <p className="text-xs text-gray-500">
+                  Dimensions in centimeters (1 - 200 cm). Default values are suitable for small items.
+                </p>
               </CardContent>
             </Card>
 

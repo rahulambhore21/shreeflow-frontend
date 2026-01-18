@@ -2,6 +2,7 @@ import api from './api';
 
 export interface OrderWithProducts {
   _id: string;
+  orderId?: string;
   customer: {
     name: string;
     email: string;
@@ -30,8 +31,10 @@ export interface OrderWithProducts {
   razorpay_payment_id?: string;
   razorpay_signature?: string;
   payment_date?: string;
+  shiprocket_order_id?: string;
   shipment_id?: string;
   awb?: string;
+  awb_code?: string;
   courier_name?: string;
   tracking_url?: string;
   estimated_delivery?: string;

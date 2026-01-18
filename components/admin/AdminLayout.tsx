@@ -15,7 +15,8 @@ import {
   LogOut,
   Menu,
   X,
-  User
+  User,
+  MapPin
 } from 'lucide-react';
 
 interface AdminLayoutProps {

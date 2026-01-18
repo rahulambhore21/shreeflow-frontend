@@ -16,6 +16,7 @@ export interface OrderAddress {
 
 export interface Order {
   _id: string;
+  orderId?: string;
   userId: string;
   products: OrderProduct[];
   amount: number;
@@ -32,6 +33,7 @@ export interface Order {
 
 export interface OrderWithProducts {
   _id: string;
+  orderId?: string;
   userId: string;
   products: Array<{
     productId: {
@@ -51,6 +53,9 @@ export interface OrderWithProducts {
   razorpay_payment_id?: string;
   razorpay_signature?: string;
   payment_date?: string;
+  shiprocket_order_id?: string;
+  awb_code?: string;
+  shipment_id?: string;
   createdAt: string;
   updatedAt: string;
 }

@@ -38,7 +38,6 @@ interface Product {
   size?: string;
   color?: string;
   price: number;
-  stock: number;
   sku?: string;
   active: boolean;
   createdAt: string;
@@ -135,9 +134,6 @@ export default function ProductViewPage({ params }: PageProps) {
               <Badge variant={product.active ? "default" : "secondary"}>
                 {product.active ? 'Active' : 'Inactive'}
               </Badge>
-              {product.stock === 0 && (
-                <Badge variant="destructive">Out of Stock</Badge>
-              )}
             </div>
             <div className="flex gap-2">
               <Button
@@ -214,18 +210,6 @@ export default function ProductViewPage({ params }: PageProps) {
                       <span className="text-sm">Price</span>
                     </div>
                     <span className="text-lg font-bold">₹{product.price.toFixed(2)}</span>
-                  </div>
-
-                  <Separator />
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Package className="h-4 w-4" />
-                      <span className="text-sm">Stock</span>
-                    </div>
-                    <span className={`text-lg font-semibold ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                      {product.stock}
-                    </span>
                   </div>
 
                   <Separator />

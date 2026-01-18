@@ -33,13 +33,6 @@ export interface DashboardAnalytics {
     status: string;
     createdAt: string;
   }>;
-  lowStockProducts: Array<{
-    _id: string;
-    title: string;
-    stock: number;
-    price: number;
-    image: string;
-  }>;
   userGrowth: Array<{
     _id: string;
     newUsers: number;

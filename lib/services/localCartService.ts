@@ -6,7 +6,6 @@ export interface CartItem {
   price: number;
   image: string;
   quantity: number;
-  stock: number;
 }
 
 export interface LocalCart {
@@ -68,20 +67,14 @@ class LocalCartService {
     if (existingItemIndex !== -1) {
       // Update existing item quantity
       cart.items[existingItemIndex].quantity += quantity;
-      
-      // Ensure quantity doesn't exceed stock
-      if (cart.items[existingItemIndex].quantity > (product.stock || 0)) {
-        cart.items[existingItemIndex].quantity = product.stock || 0;
-      }
     } else {
-      // Add new item with validation
+      // Add new item
       const newItem: CartItem = {
         productId: product.productId,
         title: product.title,
         price: product.price || 0,
         image: product.image || '',
-        stock: product.stock || 0,
-        quantity: Math.min(quantity, product.stock || 0)
+        quantity: quantity
       };
       cart.items.push(newItem);
     }
@@ -99,9 +92,8 @@ class LocalCartService {
         // Remove item if quantity is 0 or less
         cart.items.splice(itemIndex, 1);
       } else {
-        // Ensure quantity doesn't exceed stock
-        const maxQuantity = cart.items[itemIndex].stock;
-        cart.items[itemIndex].quantity = Math.min(quantity, maxQuantity);
+        // Update quantity
+        cart.items[itemIndex].quantity = quantity;
       }
     }
 

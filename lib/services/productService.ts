@@ -9,9 +9,12 @@ export interface Product {
   size?: string;
   color?: string;
   price: number;
-  stock: number;
   sku?: string;
   active: boolean;
+  weight?: number;
+  length?: number;
+  breadth?: number;
+  height?: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -98,8 +101,7 @@ class ProductService {
       reviews: 100, // Default reviews - you can add this to your backend model
       description: product.description,
       features: [], // You can extract from description or add to backend model
-      inStock: product.stock > 0,
-      stock: product.stock,
+      inStock: true, // Always in stock since we removed inventory tracking
       categories: product.categories,
       sku: product.sku,
     };

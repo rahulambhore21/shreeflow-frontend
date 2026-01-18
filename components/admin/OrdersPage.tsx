@@ -16,7 +16,8 @@ import {
   Download,
   RefreshCw,
   Send,
-  MapPin
+  MapPin,
+  FileText
 } from "lucide-react";
 import { adminOrderService, OrderWithProducts } from "@/lib/services/adminOrderService";
 import { shippingService } from "@/lib/services/shippingService";
@@ -165,6 +166,47 @@ export default function OrdersPage() {
     }
   };
 
+  const handleGenerateInvoice = async (orderId: string, orderData: OrderWithProducts) => {
+    try {
+      if (!orderData.shiprocket_order_id) {
+        toast({
+          title: 'Not Available',
+          description: 'Invoice can only be generated for orders with shipments',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      const response = await shippingService.generateInvoice(orderId);
+      
+      if (response.type === 'success') {
+        // Check if there's an invoice URL
+        const invoiceUrl = response.data?.invoice_url;
+        
+        if (invoiceUrl) {
+          // Open invoice in new tab
+          window.open(invoiceUrl, '_blank');
+          toast({
+            title: 'Success',
+            description: 'Invoice opened in new tab',
+          });
+        } else {
+          toast({
+            title: 'Success',
+            description: 'Invoice generated. Check your Shiprocket dashboard.',
+          });
+        }
+      }
+    } catch (error: any) {
+      console.error('Error generating invoice:', error);
+      toast({
+        title: 'Error',
+        description: error.response?.data?.message || 'Failed to generate invoice',
+        variant: 'destructive',
+      });
+    }
+  };
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'delivered':
@@ -209,6 +251,27 @@ export default function OrdersPage() {
       currency: 'INR',
       minimumFractionDigits: 0
     }).format(amount);
+  };
+
+  const formatRelativeDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins} min${diffMins > 1 ? 's' : ''} ago`;
+    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+    
+    // For older dates, show formatted date
+    return date.toLocaleDateString('en-IN', { 
+      day: 'numeric', 
+      month: 'short', 
+      year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined 
+    });
   };
 
   const calculateStats = () => {
@@ -421,7 +484,9 @@ export default function OrdersPage() {
                   {filteredOrders.map((order) => (
                     <tr key={order._id} className="border-b border-gray-100 hover:bg-gray-50">
                       <td className="py-4 px-4">
-                        <span className="font-mono text-sm">#{order._id}</span>
+                        <span className="font-mono text-sm font-medium text-blue-600">
+                          #{order.orderId || order._id.slice(-8).toUpperCase()}
+                        </span>
                       </td>
                       <td className="py-4 px-4">
                         <div>
@@ -457,8 +522,9 @@ export default function OrdersPage() {
                         </span>
                       </td>
                       <td className="py-4 px-4">
-                        <div className="text-sm text-gray-600">
-                          {new Date(order.createdAt).toLocaleDateString()}
+                        <div className="text-sm">
+                          <div className="font-medium text-gray-900">{formatRelativeDate(order.createdAt)}</div>
+                          <div className="text-xs text-gray-500">{new Date(order.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</div>
                         </div>
                       </td>
                       <td className="py-4 px-4">
@@ -514,6 +580,17 @@ export default function OrdersPage() {
                               className="text-green-600 hover:text-green-700 bg-gray-200 px-4 py-2 rounded hover:bg-gray-300 hover:shadow-md transition-all duration-200 cursor-pointer"
                             >
                               <Search className="w-4 h-4" />
+                            </Button>
+                          )}
+                          {order.shiprocket_order_id && (
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => handleGenerateInvoice(order._id, order)}
+                              title="Generate Invoice"
+                              className="text-purple-600 hover:text-purple-700 bg-gray-200 px-4 py-2 rounded hover:bg-gray-300 hover:shadow-md transition-all duration-200 cursor-pointer"
+                            >
+                              <FileText className="w-4 h-4" />
                             </Button>
                           )}
                         </div>

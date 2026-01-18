@@ -43,8 +43,6 @@ interface AnalyticsData {
   };
   products: {
     total: number;
-    outOfStock: number;
-    lowStock: number;
   };
   topProducts: Array<{
     id: string;
@@ -117,8 +115,6 @@ export default function AnalyticsPage() {
           },
           products: {
             total: data.totalProducts || 0,
-            outOfStock: data.outOfStockProducts || 0,
-            lowStock: data.lowStockProducts || 0
           },
           topProducts: (data.topSellingProducts || []).map((p: any) => ({
             id: p._id,
@@ -149,7 +145,7 @@ export default function AnalyticsPage() {
         revenue: { total: 0, growth: 0, thisMonth: 0, lastMonth: 0 },
         orders: { total: 0, growth: 0, pending: 0, completed: 0 },
         customers: { total: 0, growth: 0, new: 0, returning: 0 },
-        products: { total: 0, outOfStock: 0, lowStock: 0 },
+        products: { total: 0 },
         topProducts: [],
         revenueByMonth: []
       });
@@ -184,8 +180,6 @@ export default function AnalyticsPage() {
       },
       products: {
         total: analyticsData.products.total,
-        outOfStock: analyticsData.products.outOfStock,
-        lowStock: analyticsData.products.lowStock
       },
       topProducts: analyticsData.topProducts,
       revenueByMonth: analyticsData.revenueByMonth
@@ -217,8 +211,6 @@ export default function AnalyticsPage() {
       '',
       'PRODUCT METRICS',
       `Total Products,${analyticsData.products.total}`,
-      `Out of Stock,${analyticsData.products.outOfStock}`,
-      `Low Stock,${analyticsData.products.lowStock}`,
       '',
       'TOP SELLING PRODUCTS',
       'Rank,Product Name,Sales,Revenue',
@@ -415,7 +407,7 @@ export default function AnalyticsPage() {
               {analyticsData.products.total}
             </p>
             <p className="text-xs text-gray-500 mt-2">
-              {analyticsData.products.outOfStock} out of stock · {analyticsData.products.lowStock} low stock
+              Total active products
             </p>
           </CardContent>
         </Card>

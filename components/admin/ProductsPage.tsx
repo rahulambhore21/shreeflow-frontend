@@ -93,10 +93,6 @@ export default function ProductsPage() {
           aValue = a.price || 0;
           bValue = b.price || 0;
           break;
-        case 'stock':
-          aValue = a.stock || 0;
-          bValue = b.stock || 0;
-          break;
         case 'created':
           aValue = new Date(a.createdAt || 0).getTime();
           bValue = new Date(b.createdAt || 0).getTime();
@@ -222,7 +218,6 @@ export default function ProductsPage() {
               >
                 <option value="name">Sort by Name</option>
                 <option value="price">Sort by Price</option>
-                <option value="stock">Sort by Stock</option>
                 <option value="created">Sort by Date</option>
               </select>
               
@@ -257,8 +252,6 @@ export default function ProductsPage() {
           {/* Stats */}
           <div className="mt-4 flex items-center gap-6 text-sm text-gray-600">
             <span>Total: {filteredProducts.length} products</span>
-            <span>In Stock: {filteredProducts.filter(p => (p.stock || 0) > 0).length}</span>
-            <span>Out of Stock: {filteredProducts.filter(p => (p.stock || 0) === 0).length}</span>
           </div>
         </CardContent>
       </Card>
@@ -311,15 +304,6 @@ export default function ProductsPage() {
                     <p className="text-sm text-gray-500 mb-2">{product.categories?.[0] || 'No category'}</p>
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-lg">{formatCurrency(product.price || 0)}</span>
-                      <span className={`px-2 py-1 text-xs rounded-full ${
-                        (product.stock || 0) > 10 
-                          ? 'bg-green-100 text-green-800' 
-                          : (product.stock || 0) > 0 
-                          ? 'bg-yellow-100 text-yellow-800' 
-                          : 'bg-red-100 text-red-800'
-                      }`}>
-                        {product.stock || 0} in stock
-                      </span>
                     </div>
                   </CardContent>
                 </Card>
@@ -334,7 +318,6 @@ export default function ProductsPage() {
                     <th className="text-left py-3 px-4 font-medium text-gray-600">Product</th>
                     <th className="text-left py-3 px-4 font-medium text-gray-600">Categories</th>
                     <th className="text-left py-3 px-4 font-medium text-gray-600">Price</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-600">Stock</th>
                     <th className="text-left py-3 px-4 font-medium text-gray-600">Status</th>
                     <th className="text-right py-3 px-4 font-medium text-gray-600">Actions</th>
                   </tr>
@@ -377,17 +360,6 @@ export default function ProductsPage() {
                       </td>
                       <td className="py-4 px-4">
                         <span className="font-medium">{formatCurrency(product.price || 0)}</span>
-                      </td>
-                      <td className="py-4 px-4">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          (product.stock || 0) > 10 
-                            ? 'bg-green-100 text-green-800' 
-                            : (product.stock || 0) > 0 
-                            ? 'bg-yellow-100 text-yellow-800' 
-                            : 'bg-red-100 text-red-800'
-                        }`}>
-                          {product.stock || 0} units
-                        </span>
                       </td>
                       <td className="py-4 px-4">
                         <button

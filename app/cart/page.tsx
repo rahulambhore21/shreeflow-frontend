@@ -138,7 +138,6 @@ export default function CartPage() {
                               variant="outline"
                               size="sm"
                               onClick={() => updateQuantity(item.productId, item.quantity + 1)}
-                              disabled={item.quantity >= (item.stock || 0)}
                               className="transition-all duration-300 hover:scale-110 active:scale-95"
                             >
                               <Plus className="w-4 h-4" />
@@ -154,13 +153,6 @@ export default function CartPage() {
                             <Trash2 className="w-4 h-4" />
                           </Button>
                         </div>
-
-                        {/* Stock Warning */}
-                        {item.quantity >= (item.stock || 0) && (
-                          <p className="text-sm text-amber-600 mt-2">
-                            Maximum quantity reached
-                          </p>
-                        )}
                       </div>
 
                       {/* Item Total */}

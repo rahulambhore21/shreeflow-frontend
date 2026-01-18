@@ -92,7 +92,9 @@ export const shippingService = {
 
   // Order Shiprocket Integration
   createShipment: async (orderId: string) => {
-    const response = await api.post(`/orders/admin/${orderId}/shipment`);
+    const response = await api.post(`/orders/admin/${orderId}/shipment`, {
+      order_id: orderId
+    });
     return response.data;
   },
 
@@ -143,6 +145,12 @@ export const shippingService = {
 
   cancelShiprocketShipment: async (awb: string) => {
     const response = await api.post('/shiprocket/cancel', { awb });
+    return response.data;
+  },
+
+  // Generate invoice
+  generateInvoice: async (orderId: string) => {
+    const response = await api.get(`/shiprocket/invoice/${orderId}`);
     return response.data;
   },
 };

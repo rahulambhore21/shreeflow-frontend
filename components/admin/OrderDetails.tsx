@@ -17,7 +17,9 @@ import {
   Calendar,
   Mail,
   Phone,
-  Loader2
+  Loader2,
+  Copy,
+  Check
 } from 'lucide-react';
 
 interface OrderDetailsProps {
@@ -26,6 +28,7 @@ interface OrderDetailsProps {
 
 interface OrderDetails {
   _id: string;
+  orderId?: string;
   customer: {
     name: string;
     email: string;
@@ -56,6 +59,11 @@ interface OrderDetails {
     zipCode: string;
     country?: string;
   };
+  // Automatic shipment fields
+  shiprocket_order_id?: string;
+  shiprocket_shipment_id?: string;
+  awb_code?: string;
+  courier_name?: string;
 }
 
 export default function OrderDetailsComponent({ orderId }: OrderDetailsProps) {
@@ -64,6 +72,27 @@ export default function OrderDetailsComponent({ orderId }: OrderDetailsProps) {
   const [order, setOrder] = useState<OrderDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isGeneratingInvoice, setIsGeneratingInvoice] = useState(false);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  const copyToClipboard = async (text: string, field: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedField(field);
+      toast({
+        title: "Copied!",
+        description: `${field} copied to clipboard`,
+        duration: 2000,
+      });
+      setTimeout(() => setCopiedField(null), 2000);
+    } catch (error) {
+      toast({
+        title: "Failed to copy",
+        description: "Please try again",
+        variant: "destructive",
+      });
+    }
+  };
 
   useEffect(() => {
     loadOrderDetails();
@@ -123,6 +152,42 @@ export default function OrderDetailsComponent({ orderId }: OrderDetailsProps) {
       });
     } finally {
       setIsUpdating(false);
+    }
+  };
+
+  const generateInvoice = async () => {
+    try {
+      setIsGeneratingInvoice(true);
+      
+      const response = await api.get(`/shiprocket/invoice/${orderId}`);
+      
+      if (response.data.type === 'success') {
+        // Check if there's an invoice URL
+        const invoiceUrl = response.data.data?.invoice_url;
+        
+        if (invoiceUrl) {
+          // Open invoice in new tab
+          window.open(invoiceUrl, '_blank');
+          toast({
+            title: 'Success',
+            description: 'Invoice generated successfully',
+          });
+        } else {
+          toast({
+            title: 'Success',
+            description: 'Invoice generated. Check your Shiprocket dashboard.',
+          });
+        }
+      }
+    } catch (error: any) {
+      console.error('Error generating invoice:', error);
+      toast({
+        title: 'Error',
+        description: error.response?.data?.message || 'Failed to generate invoice',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsGeneratingInvoice(false);
     }
   };
 
@@ -201,7 +266,22 @@ export default function OrderDetailsComponent({ orderId }: OrderDetailsProps) {
             Back
           </Button>
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Order #{order._id.slice(-8).toUpperCase()}</h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-2xl font-bold text-gray-900">Order #{order.orderId || order._id.slice(-8).toUpperCase()}</h2>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => copyToClipboard(order.orderId || order._id, 'Order ID')}
+                className="h-8 w-8 p-0 hover:bg-gray-100"
+                title="Copy Order ID"
+              >
+                {copiedField === 'Order ID' ? (
+                  <Check className="w-4 h-4 text-green-600" />
+                ) : (
+                  <Copy className="w-4 h-4 text-gray-500" />
+                )}
+              </Button>
+            </div>
             <p className="text-gray-600 mt-1">
               Placed on {formatDate(order.createdAt)}
             </p>
@@ -318,12 +398,61 @@ export default function OrderDetailsComponent({ orderId }: OrderDetailsProps) {
                 <a href={`mailto:${order.customer.email}`} className="text-sm text-blue-600 hover:underline">
                   {order.customer.email}
                 </a>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => copyToClipboard(order.customer.email, 'Email')}
+                  className="h-6 w-6 p-0 hover:bg-gray-100 ml-auto"
+                  title="Copy Email"
+                >
+                  {copiedField === 'Email' ? (
+                    <Check className="w-3 h-3 text-green-600" />
+                  ) : (
+                    <Copy className="w-3 h-3 text-gray-500" />
+                  )}
+                </Button>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-gray-400" />
                 <a href={`tel:${order.customer.phone}`} className="text-sm text-blue-600 hover:underline">
                   {order.customer.phone}
                 </a>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => copyToClipboard(order.customer.phone, 'Phone')}
+                  className="h-6 w-6 p-0 hover:bg-gray-100 ml-auto"
+                  title="Copy Phone Number"
+                >
+                  {copiedField === 'Phone' ? (
+                    <Check className="w-3 h-3 text-green-600" />
+                  ) : (
+                    <Copy className="w-3 h-3 text-gray-500" />
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Shipment Status - Automatic */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Shipment Status</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <Truck className="w-4 h-4" />
+                <span>
+                  {order.shiprocket_order_id || order.awb_code ? (
+                    <>
+                      ✅ Shipment created automatically
+                      {order.awb_code && <span className="block mt-1 font-mono text-xs">AWB: {order.awb_code}</span>}
+                      {order.courier_name && <span className="block mt-1 text-xs">Courier: {order.courier_name}</span>}
+                    </>
+                  ) : (
+                    'Shipment will be created automatically when order is processed'
+                  )}
+                </span>
               </div>
             </CardContent>
           </Card>
@@ -406,6 +535,33 @@ export default function OrderDetailsComponent({ orderId }: OrderDetailsProps) {
                     </div>
                   )}
                 </>
+              )}
+              
+              {/* Invoice Generation Button */}
+              {order.shiprocket_order_id && (
+                <div className="pt-3 mt-3 border-t">
+                  <Button
+                    onClick={generateInvoice}
+                    disabled={isGeneratingInvoice}
+                    variant="outline"
+                    className="w-full hover:bg-blue-50 hover:border-blue-500 hover:text-blue-600 transition-all duration-200"
+                  >
+                    {isGeneratingInvoice ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                        Generating Invoice...
+                      </>
+                    ) : (
+                      <>
+                        <Package className="w-4 h-4 mr-2" />
+                        Download Invoice
+                      </>
+                    )}
+                  </Button>
+                  <p className="text-xs text-gray-500 text-center mt-2">
+                    Generate and download invoice from Shiprocket
+                  </p>
+                </div>
               )}
             </CardContent>
           </Card>

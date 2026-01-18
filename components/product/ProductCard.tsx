@@ -47,8 +47,7 @@ const ProductCard = ({
       productId: id.toString(),
       title: name,
       price: price,
-      image: image,
-      stock: 100 // Default stock value for ProductCard
+      image: image
     });
   };
 

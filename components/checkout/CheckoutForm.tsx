@@ -134,6 +134,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onClose }) => {
   };
 
   const validateForm = () => {
+    // Check if all customer fields are filled
     if (!customer.name.trim() || !customer.email.trim() || !customer.phone.trim()) {
       toast({
         title: 'Missing Information',
@@ -143,6 +144,40 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onClose }) => {
       return false;
     }
 
+    // Validate name (minimum 2 characters, letters and spaces only)
+    const nameRegex = /^[a-zA-Z\s]{2,}$/;
+    if (!nameRegex.test(customer.name.trim())) {
+      toast({
+        title: 'Invalid Name',
+        description: 'Please enter a valid name (minimum 2 characters, letters only).',
+        variant: 'destructive',
+      });
+      return false;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(customer.email.trim())) {
+      toast({
+        title: 'Invalid Email',
+        description: 'Please enter a valid email address.',
+        variant: 'destructive',
+      });
+      return false;
+    }
+
+    // Validate phone number (must be 10 digits)
+    const phoneDigits = customer.phone.replace(/\D/g, '');
+    if (phoneDigits.length !== 10 || !/^[6-9]\d{9}$/.test(phoneDigits)) {
+      toast({
+        title: 'Invalid Phone Number',
+        description: 'Please enter a valid 10-digit Indian mobile number.',
+        variant: 'destructive',
+      });
+      return false;
+    }
+
+    // Check if all address fields are filled
     if (!address.street.trim() || !address.city.trim() || !address.state.trim() || !address.zipCode.trim()) {
       toast({
         title: 'Missing Address',
@@ -152,20 +187,31 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onClose }) => {
       return false;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(customer.email)) {
+    // Validate zipCode (must be 6 digits)
+    if (!/^\d{6}$/.test(address.zipCode)) {
       toast({
-        title: 'Invalid Email',
-        description: 'Please enter a valid email address.',
+        title: 'Invalid Pincode',
+        description: 'Please enter a valid 6-digit pincode.',
         variant: 'destructive',
       });
       return false;
     }
 
-    if (customer.phone.length < 10) {
+    // Validate street address length
+    if (address.street.trim().length < 10) {
       toast({
-        title: 'Invalid Phone',
-        description: 'Please enter a valid phone number.',
+        title: 'Incomplete Address',
+        description: 'Please provide a complete street address (minimum 10 characters).',
+        variant: 'destructive',
+      });
+      return false;
+    }
+
+    // Check if shipping has been calculated
+    if (shippingCharge === 0 && paymentMethod === 'online') {
+      toast({
+        title: 'Shipping Not Calculated',
+        description: 'Please wait for shipping charges to be calculated.',
         variant: 'destructive',
       });
       return false;
@@ -243,7 +289,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onClose }) => {
         if (onClose) onClose();
         
         // Redirect to thank you page with shipping info
-        const thankYouUrl = `/thank-you?orderId=${result.data._id}&amount=${finalAmount}&shippingCharge=${shippingCharge}&name=${encodeURIComponent(customer.name)}&email=${encodeURIComponent(customer.email)}&paymentMethod=cod`;
+        const thankYouUrl = `/thank-you?orderId=${result.data.orderId || result.data._id}&amount=${finalAmount}&shippingCharge=${shippingCharge}&name=${encodeURIComponent(customer.name)}&email=${encodeURIComponent(customer.email)}&paymentMethod=cod`;
         router.push(thankYouUrl);
         return;
       }
@@ -325,7 +371,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onClose }) => {
             if (onClose) onClose();
             
             // Redirect to thank you page with order details
-            const thankYouUrl = `/thank-you?orderId=${result.data._id}&amount=${finalAmount}&shippingCharge=${shippingCharge}&name=${encodeURIComponent(customer.name)}&email=${encodeURIComponent(customer.email)}`;
+            const thankYouUrl = `/thank-you?orderId=${result.data.orderId || result.data._id}&amount=${finalAmount}&shippingCharge=${shippingCharge}&name=${encodeURIComponent(customer.name)}&email=${encodeURIComponent(customer.email)}`;
             router.push(thankYouUrl);
           } catch (verifyError) {
             console.error('Payment verification error:', verifyError);

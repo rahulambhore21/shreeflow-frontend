@@ -39,8 +39,7 @@ function ProductsPage() {
       productId: product._id,
       title: product.title,
       price: product.price,
-      image: product.image,
-      stock: product.stock
+      image: product.image
     });
   };
 
@@ -102,16 +101,6 @@ function ProductsPage() {
                           <Eye className="w-6 h-6 text-blue-600" />
                         </div>
                       </div>
-                      {product.stock < 10 && product.stock > 0 && (
-                        <div className="absolute top-4 right-4 bg-yellow-500 text-white px-2 py-1 rounded-full text-sm font-semibold">
-                          Low Stock
-                        </div>
-                      )}
-                      {product.stock === 0 && (
-                        <div className="absolute top-4 right-4 bg-red-500 text-white px-2 py-1 rounded-full text-sm font-semibold">
-                          Out of Stock
-                        </div>
-                      )}
                     </div>
 
                     {/* Product Info */}
@@ -142,14 +131,6 @@ function ProductsPage() {
                         ))}
                       </div>
 
-                      {/* Stock Status */}
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-muted-foreground">Stock: {product.stock} units</span>
-                        {product.sku && (
-                          <span className="text-muted-foreground">SKU: {product.sku}</span>
-                        )}
-                      </div>
-
                       {/* Action Buttons */}
                       <div className="pt-4 border-t border-gray-100">
                         <Button
@@ -158,11 +139,10 @@ function ProductsPage() {
                             e.stopPropagation();
                             handleAddToCart(product);
                           }}
-                          disabled={cartLoading || product.stock === 0}
-                          className="w-full bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700 gap-2 disabled:opacity-50"
-                        >
+                          disabled={cartLoading}
+                          className="w-full bg-gradient-to-r from-blue-600 to-sky-600 text-white hover:from-blue-700 hover:to-sky-700 gap-2 disabled:opacity-50">
                           <ShoppingCart className="w-4 h-4" />
-                          {cartLoading ? 'Adding...' : product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                          {cartLoading ? 'Adding...' : 'Add to Cart'}
                         </Button>
                       </div>
                     </div>

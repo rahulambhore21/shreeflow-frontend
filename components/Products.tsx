@@ -83,8 +83,7 @@ const Products = () => {
         productId: product._id,
         title: product.title,
         price: product.price || 0,
-        image: product.image || '/photo1.png',
-        stock: product.stock || 0
+        image: product.image || '/photo1.png'
       });
     } catch (error) {
       console.error('Error adding product to cart:', error);

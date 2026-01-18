@@ -255,3 +255,51 @@ body {
 .read-the-docs {
   color: #888;
 }
+
+/* Print Styles for Order Details */
+@media print {
+  /* Hide unnecessary elements */
+  header, 
+  footer, 
+  nav,
+  [class*="print:hidden"] {
+    display: none !important;
+  }
+  
+  /* Reset page margins */
+  @page {
+    margin: 1cm;
+  }
+  
+  /* Ensure proper layout */
+  body {
+    background: white !important;
+    padding: 0 !important;
+  }
+  
+  /* Make order details prominent */
+  .container {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+  
+  /* Ensure cards are visible */
+  .border-green-200 {
+    border: 2px solid #86efac !important;
+  }
+  
+  /* Remove shadows and backgrounds for cleaner print */
+  .shadow, .shadow-lg, .shadow-md {
+    box-shadow: none !important;
+  }
+  
+  /* Ensure text is black for better readability */
+  .text-muted-foreground {
+    color: #374151 !important;
+  }
+  
+  /* Page breaks */
+  .card {
+    page-break-inside: avoid;
+  }
+}

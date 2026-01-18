@@ -266,15 +266,6 @@ export default function AdminDashboard() {
                     <p className="text-sm text-gray-500">{formatCurrency(product.price)}</p>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className={`px-2 py-1 text-xs rounded-full ${
-                      product.stockQuantity > 10 
-                        ? 'bg-green-100 text-green-800' 
-                        : product.stockQuantity > 0 
-                        ? 'bg-yellow-100 text-yellow-800' 
-                        : 'bg-red-100 text-red-800'
-                    }`}>
-                      {product.stockQuantity} in stock
-                    </span>
                     <div className="flex space-x-1">
                       <Button variant="ghost" size="sm" onClick={() => router.push(`/admin/products/${product._id}`)}>
                         <Edit className="w-4 h-4" />
