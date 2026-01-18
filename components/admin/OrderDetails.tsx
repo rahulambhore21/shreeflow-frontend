@@ -41,6 +41,7 @@ interface OrderDetails {
     quantity: number;
   }>;
   amount: number;
+  shipping_charges?: number;
   status: string;
   paymentStatus?: string;
   paymentMethod?: string;
@@ -254,8 +255,18 @@ export default function OrderDetailsComponent({ orderId }: OrderDetailsProps) {
                 ))}
               </div>
               
-              <div className="mt-6 pt-6 border-t">
-                <div className="flex justify-between items-center">
+              <div className="mt-6 pt-6 border-t space-y-2">
+                <div className="flex justify-between text-gray-700">
+                  <span>Subtotal</span>
+                  <span>{formatCurrency((order.amount || 0) - (order.shipping_charges || 0))}</span>
+                </div>
+                {order.shipping_charges && order.shipping_charges > 0 && (
+                  <div className="flex justify-between text-gray-700">
+                    <span>Shipping Charges</span>
+                    <span>{formatCurrency(order.shipping_charges)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between items-center pt-2 border-t">
                   <span className="text-lg font-semibold text-gray-900">Total Amount</span>
                   <span className="text-2xl font-bold text-blue-600">
                     {formatCurrency(order.amount)}
@@ -368,28 +379,36 @@ export default function OrderDetailsComponent({ orderId }: OrderDetailsProps) {
           </Card>
 
           {/* Payment Information */}
-          {order.razorpayPaymentId && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <CreditCard className="w-5 h-5" />
-                  Payment Info
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2 text-sm">
-                <div>
-                  <p className="text-gray-500">Payment ID</p>
-                  <p className="font-mono text-xs text-gray-900 break-all">{order.razorpayPaymentId}</p>
-                </div>
-                {order.razorpayOrderId && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <CreditCard className="w-5 h-5" />
+                Payment Info
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm">
+              <div>
+                <p className="text-gray-500">Payment Method</p>
+                <p className="font-semibold text-gray-900">
+                  {order.paymentMethod === 'cod' ? 'Cash on Delivery (COD)' : 'Online Payment'}
+                </p>
+              </div>
+              {order.razorpayPaymentId && (
+                <>
                   <div>
-                    <p className="text-gray-500">Order ID</p>
-                    <p className="font-mono text-xs text-gray-900 break-all">{order.razorpayOrderId}</p>
+                    <p className="text-gray-500">Payment ID</p>
+                    <p className="font-mono text-xs text-gray-900 break-all">{order.razorpayPaymentId}</p>
                   </div>
-                )}
-              </CardContent>
-            </Card>
-          )}
+                  {order.razorpayOrderId && (
+                    <div>
+                      <p className="text-gray-500">Order ID</p>
+                      <p className="font-mono text-xs text-gray-900 break-all">{order.razorpayOrderId}</p>
+                    </div>
+                  )}
+                </>
+              )}
+            </CardContent>
+          </Card>
 
           {/* Timeline */}
           <Card>

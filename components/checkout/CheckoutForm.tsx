@@ -33,6 +33,11 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onClose }) => {
   const { cart, clearCart } = useLocalCart();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<'online' | 'cod'>('online');
+  const [shippingCharge, setShippingCharge] = useState<number>(0);
+  const [isCalculatingShipping, setIsCalculatingShipping] = useState(false);
+  const [shippingCourier, setShippingCourier] = useState<string>('');
+  const [shippingEtd, setShippingEtd] = useState<string>('');
   
   const [customer, setCustomer] = useState<CustomerInfo>({
     name: '',
@@ -60,6 +65,72 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onClose }) => {
       ...address,
       [e.target.name]: e.target.value,
     });
+
+    // Auto-calculate shipping when zipCode changes and has 6 digits
+    if (e.target.name === 'zipCode' && e.target.value.length === 6) {
+      calculateShipping(e.target.value);
+    }
+  };
+
+  const calculateShipping = async (zipCode: string) => {
+    if (zipCode.length !== 6) return;
+
+    setIsCalculatingShipping(true);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+      
+      // Calculate total weight (assume 0.5 kg per item)
+      const totalWeight = cart.items.reduce((sum, item) => sum + (item.quantity * 0.5), 0);
+      
+      const response = await fetch(`${apiUrl}/shipping/calculate-checkout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          delivery_postcode: zipCode,
+          weight: totalWeight,
+          cod: paymentMethod === 'cod',
+          order_amount: cart.totalAmount
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        if (result.type === 'success' && result.data.available) {
+          setShippingCharge(result.data.shipping_charge || 0);
+          setShippingCourier(result.data.courier_name || '');
+          setShippingEtd(result.data.estimated_delivery_days || '');
+          
+          toast({
+            title: 'Shipping Calculated',
+            description: `Shipping charge: ₹${result.data.shipping_charge}`,
+          });
+        } else {
+          setShippingCharge(0);
+          toast({
+            title: 'Shipping Unavailable',
+            description: result.data.message || 'Shipping not available for this location',
+            variant: 'destructive',
+          });
+        }
+      } else {
+        setShippingCharge(0);
+      }
+    } catch (error) {
+      console.error('Shipping calculation error:', error);
+      setShippingCharge(0);
+    } finally {
+      setIsCalculatingShipping(false);
+    }
+  };
+
+  const handlePaymentMethodChange = (method: 'online' | 'cod') => {
+    setPaymentMethod(method);
+    // Recalculate shipping if zipCode is filled
+    if (address.zipCode.length === 6) {
+      calculateShipping(address.zipCode);
+    }
   };
 
   const validateForm = () => {
@@ -113,6 +184,9 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onClose }) => {
     setIsLoading(true);
 
     try {
+      // Calculate final amount with shipping
+      const finalAmount = cart.totalAmount + shippingCharge;
+
       // Create order data
       const orderData = {
         customer: {
@@ -121,8 +195,10 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onClose }) => {
           phone: customer.phone.trim(),
         },
         products: localCartService.getCartForOrder(),
-        amount: cart.totalAmount,
+        amount: finalAmount,
+        shipping_charges: shippingCharge,
         address,
+        paymentMethod, // Add payment method
       };
 
       // Use the backend API URL from environment or default
@@ -155,9 +231,27 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onClose }) => {
 
       const result = await response.json();
 
+      // If COD, skip Razorpay and redirect directly
+      if (paymentMethod === 'cod') {
+        clearCart();
+        
+        toast({
+          title: 'Order Placed Successfully!',
+          description: 'Your order has been placed. Pay on delivery.',
+        });
+
+        if (onClose) onClose();
+        
+        // Redirect to thank you page with shipping info
+        const thankYouUrl = `/thank-you?orderId=${result.data._id}&amount=${finalAmount}&shippingCharge=${shippingCharge}&name=${encodeURIComponent(customer.name)}&email=${encodeURIComponent(customer.email)}&paymentMethod=cod`;
+        router.push(thankYouUrl);
+        return;
+      }
+
+      // For online payment, continue with Razorpay
       // Create Razorpay order for payment
       const razorpayOrderData = {
-        amount: cart.totalAmount,
+        amount: finalAmount,
         currency: 'INR',
         receipt: `order_${result.data._id}`,
         notes: {
@@ -193,7 +287,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onClose }) => {
 
       // Initialize Razorpay payment
       await paymentService.initializePayment({
-        amount: cart.totalAmount,
+        amount: finalAmount,
         orderId: result.data._id,
         name: customer.name,
         email: customer.email,
@@ -231,7 +325,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onClose }) => {
             if (onClose) onClose();
             
             // Redirect to thank you page with order details
-            const thankYouUrl = `/thank-you?orderId=${result.data._id}&amount=${cart.totalAmount}&name=${encodeURIComponent(customer.name)}&email=${encodeURIComponent(customer.email)}`;
+            const thankYouUrl = `/thank-you?orderId=${result.data._id}&amount=${finalAmount}&shippingCharge=${shippingCharge}&name=${encodeURIComponent(customer.name)}&email=${encodeURIComponent(customer.email)}`;
             router.push(thankYouUrl);
           } catch (verifyError) {
             console.error('Payment verification error:', verifyError);
@@ -293,9 +387,29 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onClose }) => {
               </div>
             ))}
             <hr />
-            <div className="flex justify-between font-semibold">
-              <span>Total</span>
+            <div className="flex justify-between">
+              <span>Subtotal</span>
               <span>₹{cart.totalAmount.toLocaleString()}</span>
+            </div>
+            {shippingCharge > 0 && (
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">
+                  Shipping {shippingCourier && `(${shippingCourier})`}
+                  {shippingEtd && ` - ${shippingEtd} days`}
+                </span>
+                <span>₹{shippingCharge.toLocaleString()}</span>
+              </div>
+            )}
+            {isCalculatingShipping && (
+              <div className="flex justify-between text-sm text-muted-foreground">
+                <span>Calculating shipping...</span>
+                <span>...</span>
+              </div>
+            )}
+            <hr className="my-2" />
+            <div className="flex justify-between font-semibold text-lg">
+              <span>Total</span>
+              <span>₹{(cart.totalAmount + shippingCharge).toLocaleString()}</span>
             </div>
           </div>
         </CardContent>
@@ -415,6 +529,48 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onClose }) => {
           </CardContent>
         </Card>
 
+        {/* Payment Method Selection */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Payment Method</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-3">
+              <div className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => handlePaymentMethodChange('online')}>
+                <input
+                  type="radio"
+                  id="online"
+                  name="paymentMethod"
+                  value="online"
+                  checked={paymentMethod === 'online'}
+                  onChange={() => handlePaymentMethodChange('online')}
+                  className="w-4 h-4 text-blue-600"
+                />
+                <Label htmlFor="online" className="flex-1 cursor-pointer">
+                  <div className="font-semibold">Online Payment</div>
+                  <div className="text-sm text-gray-500">Pay securely using Razorpay (Cards, UPI, Netbanking)</div>
+                </Label>
+              </div>
+              
+              <div className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => handlePaymentMethodChange('cod')}>
+                <input
+                  type="radio"
+                  id="cod"
+                  name="paymentMethod"
+                  value="cod"
+                  checked={paymentMethod === 'cod'}
+                  onChange={() => handlePaymentMethodChange('cod')}
+                  className="w-4 h-4 text-blue-600"
+                />
+                <Label htmlFor="cod" className="flex-1 cursor-pointer">
+                  <div className="font-semibold">Cash on Delivery (COD)</div>
+                  <div className="text-sm text-gray-500">Pay when you receive your order</div>
+                </Label>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Submit Button */}
         <div className="flex gap-4 ">
           {onClose && (
@@ -427,7 +583,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onClose }) => {
             disabled={isLoading || cart.items.length === 0}
             className="flex-1 bg-blue-600 text-white"
           >
-            {isLoading ? 'Processing...' : `Pay ₹${cart.totalAmount.toLocaleString()}`}
+            {isLoading ? 'Processing...' : paymentMethod === 'cod' ? `Place Order (COD) - ₹${(cart.totalAmount + shippingCharge).toLocaleString()}` : `Pay ₹${(cart.totalAmount + shippingCharge).toLocaleString()}`}
           </Button>
         </div>
       </form>

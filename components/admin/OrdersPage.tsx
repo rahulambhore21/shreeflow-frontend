@@ -128,14 +128,18 @@ export default function OrdersPage() {
         await fetchOrders();
         toast({
           title: 'Success',
-          description: 'Shipment created successfully in Shiprocket',
+          description: `Shipment created successfully. Shipment ID: ${response.data?.shipmentId || 'N/A'}`,
         });
       }
     } catch (error: any) {
       console.error('Error creating shipment:', error);
+      
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to create shipment';
+      const requiresReauth = error.response?.data?.requiresReauth;
+      
       toast({
-        title: 'Error',
-        description: error.response?.data?.message || 'Failed to create shipment',
+        title: 'Shipment Creation Failed',
+        description: errorMessage + (requiresReauth ? ' Go to Admin > Shipping to re-authenticate.' : ''),
         variant: 'destructive',
       });
     }
@@ -407,6 +411,7 @@ export default function OrdersPage() {
                     <th className="text-left py-3 px-4 font-medium text-gray-600">Customer</th>
                     <th className="text-left py-3 px-4 font-medium text-gray-600">Products</th>
                     <th className="text-left py-3 px-4 font-medium text-gray-600">Amount</th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-600">Payment</th>
                     <th className="text-left py-3 px-4 font-medium text-gray-600">Status</th>
                     <th className="text-left py-3 px-4 font-medium text-gray-600">Date</th>
                     <th className="text-right py-3 px-4 font-medium text-gray-600">Actions</th>
@@ -433,6 +438,17 @@ export default function OrdersPage() {
                       </td>
                       <td className="py-4 px-4">
                         <span className="font-semibold">{formatCurrency(order.amount || 0)}</span>
+                      </td>
+                      <td className="py-4 px-4">
+                        <div className="flex flex-col">
+                          <span className={`text-xs font-medium px-2 py-1 rounded-full inline-block w-fit ${
+                            order.paymentMethod === 'cod' 
+                              ? 'bg-orange-100 text-orange-700' 
+                              : 'bg-green-100 text-green-700'
+                          }`}>
+                            {order.paymentMethod === 'cod' ? 'COD' : 'Online'}
+                          </span>
+                        </div>
                       </td>
                       <td className="py-4 px-4">
                         <span className={getStatusBadge(order.status)}>

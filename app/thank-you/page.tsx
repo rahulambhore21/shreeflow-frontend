@@ -14,8 +14,10 @@ function ThankYouContent() {
   const [orderDetails, setOrderDetails] = useState({
     orderId: searchParams.get('orderId') || 'SF' + Date.now(),
     amount: searchParams.get('amount') || '2999',
+    shippingCharge: searchParams.get('shippingCharge') || '0',
     customerName: searchParams.get('name') || 'Customer',
     customerEmail: searchParams.get('email') || '',
+    paymentMethod: searchParams.get('paymentMethod') || 'online',
   });
 
   return (
@@ -33,7 +35,9 @@ function ThankYouContent() {
               Thank You for Your Order!
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Your order has been successfully placed and payment confirmed. We're excited to serve you!
+              {orderDetails.paymentMethod === 'cod' 
+                ? 'Your order has been successfully placed. Pay when you receive your order!' 
+                : 'Your order has been successfully placed and payment confirmed. We\'re excited to serve you!'}
             </p>
           </div>
 
@@ -52,13 +56,29 @@ function ThankYouContent() {
                       <span className="text-muted-foreground">Customer:</span>
                       <span className="font-semibold">{orderDetails.customerName}</span>
                     </div>
+                    {parseInt(orderDetails.shippingCharge) > 0 && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Shipping Charges:</span>
+                        <span>₹{parseInt(orderDetails.shippingCharge).toLocaleString()}</span>
+                      </div>
+                    )}
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Amount Paid:</span>
+                      <span className="text-muted-foreground">
+                        {orderDetails.paymentMethod === 'cod' ? 'Total Amount:' : 'Amount Paid:'}
+                      </span>
                       <span className="font-semibold text-green-600">₹{parseInt(orderDetails.amount).toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between">
+                      <span className="text-muted-foreground">Payment Method:</span>
+                      <span className="font-semibold">
+                        {orderDetails.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
                       <span className="text-muted-foreground">Payment Status:</span>
-                      <span className="text-green-600 font-semibold">✓ Paid</span>
+                      <span className={`font-semibold ${orderDetails.paymentMethod === 'cod' ? 'text-orange-600' : 'text-green-600'}`}>
+                        {orderDetails.paymentMethod === 'cod' ? '○ Pay on Delivery' : '✓ Paid'}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Order Date:</span>

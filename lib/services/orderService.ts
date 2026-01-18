@@ -21,6 +21,7 @@ export interface Order {
   amount: number;
   address: OrderAddress;
   status: 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
+  paymentMethod?: 'online' | 'cod';
   razorpay_order_id?: string;
   razorpay_payment_id?: string;
   razorpay_signature?: string;
@@ -42,8 +43,10 @@ export interface OrderWithProducts {
     quantity: number;
   }>;
   amount: number;
+  shipping_charges?: number;
   address: OrderAddress;
   status: string;
+  paymentMethod?: 'online' | 'cod';
   razorpay_order_id?: string;
   razorpay_payment_id?: string;
   razorpay_signature?: string;
