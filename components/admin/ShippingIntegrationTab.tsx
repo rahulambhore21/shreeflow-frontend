@@ -202,9 +202,14 @@ export default function ShippingIntegrationTab() {
                     <p className="text-sm text-gray-500">Email: {shiprocketStatus.email}</p>
                   )}
                   {shiprocketStatus.status === 'connected' && (
-                    <p className="text-sm text-green-600 font-medium mt-1">
-                      ✓ Ready for automatic shipments. Manage pickup locations in your Shiprocket dashboard.
-                    </p>
+                    <>
+                      <p className="text-sm text-green-600 font-medium mt-1">
+                        ✓ Ready for automatic shipments. Manage pickup locations in your Shiprocket dashboard.
+                      </p>
+                      <p className="text-xs text-blue-600 mt-1">
+                        🔄 Auto-refresh enabled - Token will refresh automatically before expiration
+                      </p>
+                    </>
                   )}
                 </div>
                 <Button
