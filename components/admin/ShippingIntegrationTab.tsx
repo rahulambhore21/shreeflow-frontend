@@ -114,6 +114,15 @@ export default function ShippingIntegrationTab() {
     try {
       const response = await shippingService.checkShiprocketStatus();
       setShiprocketStatus(response.data);
+      
+      // Show notification if token expired
+      if (response.data.status === 'token_expired' || response.data.requires_reauth) {
+        toast({
+          title: 'Authentication Required',
+          description: 'Shiprocket token has expired. Please log in again to continue using shipping features.',
+          variant: 'destructive',
+        });
+      }
     } catch (error: any) {
       console.error('Error checking Shiprocket status:', error);
       setShiprocketStatus({

@@ -102,17 +102,19 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onClose }) => {
           setShippingCourier(result.data.courier_name || '');
           setShippingEtd(result.data.estimated_delivery_days || '');
           
-          toast({
-            title: 'Shipping Calculated',
-            description: `Shipping charge: ₹${result.data.shipping_charge}`,
-          });
+          if (result.data.shipping_charge > 0) {
+            toast({
+              title: 'Shipping Calculated',
+              description: `Shipping charge: ₹${result.data.shipping_charge} via ${result.data.courier_name || 'courier'}`,
+            });
+          }
         } else {
           setShippingCharge(0);
-          toast({
-            title: 'Shipping Unavailable',
-            description: result.data.message || 'Shipping not available for this location',
-            variant: 'destructive',
-          });
+          // Only show toast if there's an important message (not just unavailable)
+          if (result.data.requiresReauth) {
+            console.warn('Shiprocket requires re-authentication');
+          }
+          // Don't show error toast for normal unavailability
         }
       } else {
         setShippingCharge(0);
@@ -120,6 +122,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onClose }) => {
     } catch (error) {
       console.error('Shipping calculation error:', error);
       setShippingCharge(0);
+      // Set zero shipping silently - don't block checkout
     } finally {
       setIsCalculatingShipping(false);
     }
