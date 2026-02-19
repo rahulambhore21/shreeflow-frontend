@@ -72,9 +72,19 @@ export interface OrdersResponse {
 }
 
 export interface CreateOrderData {
+  customer: {
+    name: string;
+    email: string;
+    phone: string;
+  };
   products: OrderProduct[];
   amount: number;
   address: OrderAddress;
+  paymentMethod: 'online' | 'cod';
+  shipping_charges?: number;
+  razorpay_order_id?: string;
+  razorpay_payment_id?: string;
+  razorpay_signature?: string;
 }
 
 class OrderService {
