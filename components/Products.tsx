@@ -7,6 +7,7 @@ import { useLocalCart } from "@/context/LocalCartContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { productService, Product } from "@/lib/services/productService";
+import { generateSlug } from "@/lib/slug";
 
 const Products = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -93,7 +94,7 @@ const Products = () => {
   };
 
   const handleViewProduct = (product: Product) => {
-    const slug = product.title.toLowerCase().replace(/\s+/g, '-');
+    const slug = generateSlug(product.title);
     router.push(`/products/${slug}`);
   };
 

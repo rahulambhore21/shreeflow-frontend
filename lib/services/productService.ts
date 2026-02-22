@@ -1,4 +1,5 @@
 import api from './api';
+import { generateSlug } from '../slug';
 
 export interface Product {
   _id: string;
@@ -55,14 +56,16 @@ class ProductService {
 
   async getProductBySlug(slug: string): Promise<Product | null> {
     try {
-      // Fetch all products and filter by slug (converting title to slug format)
-      const response = await this.getAllProducts({ limit: 100 });
-      const product = response.data.find(
-        (p) => p.title.toLowerCase().replace(/\s+/g, '-') === slug
-      );
-      return product || null;
-    } catch (error) {
-      console.error('Error fetching product by slug:', error);
+      // Use the backend endpoint directly - it handles slug-to-title conversion
+      const response = await api.get(`/products/${slug}`);
+      return response.data.data;
+    } catch (error: any) {
+      // Return null if product not found (404) or other errors
+      if (error.response?.status === 404) {
+        console.log('Product not found for slug:', slug);
+      } else {
+        console.error('Error fetching product by slug:', error);
+      }
       return null;
     }
   }
@@ -93,7 +96,7 @@ class ProductService {
     return {
       id: product._id,
       name: product.title,
-      slug: product.title.toLowerCase().replace(/\s+/g, '-'),
+      slug: generateSlug(product.title),
       price: product.price,
       originalPrice: undefined, // You can calculate this if you have discount logic
       image: product.image,
