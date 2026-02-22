@@ -57,14 +57,23 @@ class ProductService {
   async getProductBySlug(slug: string): Promise<Product | null> {
     try {
       // Use the backend endpoint directly - it handles slug-to-title conversion
+      console.log(`[ProductService] Fetching product by slug: ${slug}`);
       const response = await api.get(`/products/${slug}`);
+      console.log(`[ProductService] Successfully fetched product: ${response.data.data?.title}`);
       return response.data.data;
     } catch (error: any) {
       // Return null if product not found (404) or other errors
       if (error.response?.status === 404) {
-        console.log('Product not found for slug:', slug);
+        console.log(`[ProductService] Product not found for slug: ${slug}`);
       } else {
-        console.error('Error fetching product by slug:', error);
+        console.error('[ProductService] Error fetching product by slug:', {
+          slug,
+          error: error.message,
+          response: error.response?.data,
+          status: error.response?.status,
+          url: error.config?.url,
+          baseURL: error.config?.baseURL
+        });
       }
       return null;
     }
