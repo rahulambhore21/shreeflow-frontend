@@ -120,7 +120,7 @@ export default function ArticleCard({ article, compact = false }: ArticleCardPro
             </div>
             <div className="flex items-center space-x-1 flex-shrink-0">
               <User className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-              <span className="font-medium text-xs sm:text-sm truncate max-w-[100px]" title={article.author.username}>{article.author.username}</span>
+              <span className="font-medium text-xs sm:text-sm truncate max-w-[100px]" title={article.author?.username || 'Shree Flow'}>{article.author?.username || 'Shree Flow'}</span>
             </div>
           </div>
 

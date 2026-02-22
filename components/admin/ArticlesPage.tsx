@@ -355,7 +355,7 @@ export default function ArticlesPage() {
                         <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
                           <div className="flex items-center gap-1">
                             <User className="w-4 h-4" />
-                            {article.author.username}
+                            {article.author?.username || 'Unknown'}
                           </div>
                           <div className="flex items-center gap-1">
                             <Calendar className="w-4 h-4" />

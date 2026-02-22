@@ -7,11 +7,11 @@ export interface Article {
   content: string;
   excerpt: string;
   featuredImage: string;
-  author: {
+  author?: {
     _id: string;
     username: string;
     email: string;
-  };
+  } | null;
   status: 'draft' | 'published' | 'archived';
   tags: string[];
   categories: string[];

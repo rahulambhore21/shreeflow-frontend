@@ -153,7 +153,7 @@ export default function ArticleDetail({ article: initialArticle }: ArticleDetail
                     <User className="h-4 w-4 md:h-5 md:w-5 text-blue-600" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="font-semibold text-gray-900 text-sm md:text-base truncate">By {article.author.username}</p>
+                    <p className="font-semibold text-gray-900 text-sm md:text-base truncate">By {article.author?.username || 'Shree Flow'}</p>
                     <p className="text-xs md:text-sm text-gray-500">Author</p>
                   </div>
                 </div>

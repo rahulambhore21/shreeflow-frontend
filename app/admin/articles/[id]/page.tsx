@@ -157,7 +157,7 @@ export default function ArticleViewPage({ params }: PageProps) {
               <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mt-4">
                 <div className="flex items-center gap-2">
                   <User className="h-4 w-4" />
-                  <span>{article.author.username}</span>
+                  <span>{article.author?.username || 'Unknown'}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4" />

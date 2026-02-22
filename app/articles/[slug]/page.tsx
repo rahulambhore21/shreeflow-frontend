@@ -22,9 +22,9 @@ interface ArticleData {
   featuredImage?: string;
   publishedAt?: string;
   updatedAt?: string;
-  author: {
+  author?: {
     username: string;
-  };
+  } | null;
 }
 
 interface ArticleResponse {
@@ -120,6 +120,9 @@ function generateArticleMetadata(
   const articleUrl = `${baseUrl}/articles/${slug}`;
   const imageUrl =
     article.featuredImage || `${baseUrl}${DEFAULT_METADATA.defaultImage}`;
+  
+  // Safely get author name
+  const authorName = article.author?.username || 'Shree Flow';
 
   return {
     title: `${article.seoTitle || article.title} | ${DEFAULT_METADATA.siteName}`,
@@ -128,7 +131,7 @@ function generateArticleMetadata(
       article.excerpt ||
       `Read about ${article.title} - Expert insights on water purification and sustainable living.`,
     keywords: article.tags?.join(', ') || DEFAULT_METADATA.defaultKeywords,
-    authors: [{ name: article.author.username }],
+    authors: [{ name: authorName }],
     category: article.category || 'Articles',
     
     openGraph: {
@@ -140,7 +143,7 @@ function generateArticleMetadata(
       type: 'article',
       publishedTime: article.publishedAt,
       modifiedTime: article.updatedAt,
-      authors: [article.author.username],
+      authors: [authorName],
       section: article.category || 'General',
       images: [
         {
