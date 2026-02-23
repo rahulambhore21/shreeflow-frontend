@@ -10,6 +10,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { productService, Product as BackendProduct } from "@/lib/services/productService";
 import { useLocalCart } from "@/context/LocalCartContext";
+import ProductImageGallery from "@/components/product/ProductImageGallery";
 
 interface ProductPageProps {
   params: Promise<{
@@ -77,6 +78,11 @@ export default function ProductPage({ params }: ProductPageProps) {
     ? product.categories.map(cat => cat.charAt(0).toUpperCase() + cat.slice(1))
     : ['Smart Water Detection', 'Automatic Control', 'Easy Installation', 'Durable Design'];
 
+  // Prepare images array - use images array if available, otherwise fallback to single image
+  const productImages = product.images && product.images.length > 0 
+    ? product.images 
+    : [product.image];
+
   return (
     <div className="min-h-screen bg-background overflow-x-hidden w-full">
       <Header />
@@ -105,19 +111,8 @@ export default function ProductPage({ params }: ProductPageProps) {
         {/* Product Detail Section */}
         <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12 max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-start overflow-hidden">
-            {/* Product Images */}
-            <div className="space-y-4 md:space-y-6 w-full max-w-full">
-              {/* Main Image */}
-              <div className="aspect-square bg-gradient-to-br from-blue-50 via-sky-50 to-cyan-50 rounded-xl md:rounded-2xl overflow-hidden p-6 md:p-10 border border-blue-200/50 relative shadow-lg">
-                <Image
-                  src={product.image}
-                  alt={product.title}
-                  fill
-                  className="object-contain"
-                  priority
-                />
-              </div>
-            </div>
+            {/* Product Images Gallery */}
+            <ProductImageGallery images={productImages} productName={product.title} />
 
             {/* Product Info */}
             <div className="space-y-6 md:space-y-8 w-full max-w-full overflow-hidden">

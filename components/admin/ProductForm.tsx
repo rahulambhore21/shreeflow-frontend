@@ -28,6 +28,7 @@ interface ProductFormData {
   description: string;
   price: number;
   image: string;
+  images: string[];
   categories: string[];
   sku?: string;
   size?: string;
@@ -51,6 +52,7 @@ export default function ProductForm({ mode, productId }: ProductFormProps) {
     description: '',
     price: 0,
     image: '',
+    images: [],
     categories: [],
     sku: '',
     size: '',
@@ -197,6 +199,22 @@ export default function ProductForm({ mode, productId }: ProductFormProps) {
     setFormData({
       ...formData,
       categories: formData.categories.filter(c => c !== category)
+    });
+  };
+
+  const handleAddImage = (url: string) => {
+    if (url && !formData.images.includes(url)) {
+      setFormData({
+        ...formData,
+        images: [...formData.images, url]
+      });
+    }
+  };
+
+  const handleRemoveImage = (index: number) => {
+    setFormData({
+      ...formData,
+      images: formData.images.filter((_, i) => i !== index)
     });
   };
 
@@ -377,33 +395,84 @@ export default function ProductForm({ mode, productId }: ProductFormProps) {
                       min="1"
                       max="200"
                       value={formData.height}
-                      onChange={(e) => setFormData({ ...formData, height: parseInt(e.target.value) || 5 })}
-                      placeholder="5"
+                      onChange={(e) => setFormData({ ...formData, height: parseInt(e.target.value) || 10 })}
+                      placeholder="10"
                       className="mt-1"
                     />
                   </div>
                 </div>
-
-                <p className="text-xs text-gray-500">
-                  Dimensions in centimeters (1 - 200 cm). Default values are suitable for small items.
-                </p>
               </CardContent>
             </Card>
 
+            {/* Additional Images Section */}
             <Card>
               <CardHeader>
-                <CardTitle>Product Image</CardTitle>
+                <CardTitle>Product Images</CardTitle>
+                <p className="text-sm text-gray-600 mt-1">
+                  Add multiple images for your product. The first image will be the main product image.
+                </p>
               </CardHeader>
-              <CardContent>
-                <ImageUpload
-                  value={formData.image}
-                  onChange={(url) => setFormData({ ...formData, image: url })}
-                  label="Product Image"
-                  disabled={isLoading}
-                />
-                {errors.image && (
-                  <p className="text-sm text-red-600 mt-2">{errors.image}</p>
-                )}
+              <CardContent className="space-y-4">
+                {/* Main Product Image */}
+                <div>
+                  <Label>Main Product Image <span className="text-red-500">*</span></Label>
+                  <ImageUpload
+                    value={formData.image}
+                    onChange={(url) => setFormData({ ...formData, image: url })}
+                    label="Main Image"
+                    disabled={isLoading}
+                  />
+                  {errors.image && (
+                    <p className="text-sm text-red-600 mt-2">{errors.image}</p>
+                  )}
+                </div>
+
+                {/* Additional Images */}
+                <div className="border-t pt-4">
+                  <Label>Additional Images (Gallery)</Label>
+                  <p className="text-xs text-gray-500 mb-3">
+                    Add more images to showcase your product from different angles
+                  </p>
+                  
+                  <ImageUpload
+                    value=""
+                    onChange={handleAddImage}
+                    label="Add Image to Gallery"
+                    disabled={isLoading}
+                  />
+
+                  {/* Display Additional Images */}
+                  {formData.images.length > 0 && (
+                    <div className="mt-4 space-y-2">
+                      <p className="text-sm font-medium">Gallery Images ({formData.images.length}):</p>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        {formData.images.map((img, index) => (
+                          <div key={index} className="relative group">
+                            <div className="aspect-square rounded-lg overflow-hidden border-2 border-gray-200">
+                              <img
+                                src={img}
+                                alt={`Product image ${index + 1}`}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              size="icon"
+                              className="absolute top-2 right-2 w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                              onClick={() => handleRemoveImage(index)}
+                            >
+                              <X className="w-4 h-4" />
+                            </Button>
+                            <div className="absolute bottom-2 left-2 bg-black/60 text-white px-2 py-0.5 rounded text-xs">
+                              Image {index + 1}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
           </div>
