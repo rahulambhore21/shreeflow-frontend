@@ -82,6 +82,7 @@ export default function ProductForm({ mode, productId }: ProductFormProps) {
         description: product.description,
         price: product.price,
         image: product.image,
+        images: product.images || [],
         categories: product.categories || [],
         sku: product.sku || '',
         size: product.size || '',
